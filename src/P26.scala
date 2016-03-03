@@ -13,9 +13,9 @@ object P26 {
   }
 
 
-  def combinations2(x: Int, list: List[Symbol]): List[List[Symbol]] = {
+  def combinations2[A](x: Int, list: List[A]): List[List[A]] = {
 
-    println(" x: " + x + " list: " + list)
+//    println(" x: " + x + " list: " + list)
 
     if (list.length <= 0 || x <= 0)
       List()
@@ -23,9 +23,9 @@ object P26 {
      else {
       val head = list.head
       val rest = list.tail
-      val tmp: List[List[Symbol]] = combinations(x -1, rest)
+      val tmp: List[List[A]] = combinations2(x -1, rest)
       val result = tmp.map ( comb => head::comb)
-      result ::: combinations(x, rest)
+      result ::: combinations2(x, rest)
     }
   }
 
@@ -37,7 +37,7 @@ object P26 {
 
   def combinations[A](n: Int, ls: List[A]): List[List[A]] = {
 
-    println(" x: " + n + " list: " + ls)
+//    println(" x: " + n + " list: " + ls)
     if (n == 0) List(Nil)
     else flatMapSublists(ls) { sl =>
       combinations(n - 1, sl.tail) map {
