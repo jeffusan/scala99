@@ -10,8 +10,19 @@ object P27 {
 //    scala> group3(List("Aldo", "Beat", "Carla", "David", "Evi", "Flip", "Gary", "Hugo", "Ida"))
 //  res0: List[List[List[String]]] = List(List(List(Aldo, Beat), List(Carla, David, Evi), List(Flip, Gary, Hugo, Ida)), ...
 
+//  b) Generalize the above predicate in a way that we can specify a list of group sizes and the predicate will return a list of groups.
+//
+//  Example:
+//
+//    scala> group(List(2, 2, 5), List("Aldo", "Beat", "Carla", "David", "Evi", "Flip", "Gary", "Hugo", "Ida"))
+//  res0: List[List[List[String]]] = List(List(List(Aldo, Beat), List(Carla, David), List(Evi, Flip, Gary, Hugo, Ida)), ...
+//  Note that we do not want permutations of the group members; i.e. ((Aldo, Beat), ...) is the same solution as ((Beat, Aldo), ...). However, we make a difference between ((Aldo, Beat), (Carla, David), ...) and ((Carla, David), (Aldo, Beat), ...).
+//
+//  You may find more about this combinatorial problem in a good book on discrete mathematics under the term "multinomial coefficients".
+
   def main(args: Array[String]) {
-    println(group3(List("Aldo", "Beat", "Carla", "David", "Evi", "Flip", "Gary", "Hugo", "Ida")))
+//    println(group3(List("Aldo", "Beat", "Carla", "David", "Evi", "Flip", "Gary", "Hugo", "Ida")))
+    println(groupn(List(4, 3, 2), List("Aldo", "Beat", "Carla", "David", "Evi", "Flip", "Gary", "Hugo", "Ida")))
   }
 
   def group3(ls: List[String]): List[List[List[String]]] = {
@@ -34,6 +45,17 @@ object P27 {
 
     result
 
+  }
+
+  def groupn(nLs: List[Int], ls: List[String]): List[List[List[String]]] = {
+
+    if(nLs.length == 0) List(Nil)
+    else {
+      combinations(nLs(0), ls).flatMap(
+       comb => groupn(nLs.tail, ls.filter(e => !comb.contains(e))).map (comb :: _)
+      )
+
+    }
   }
 
 //  def group3_solution[A](ls: List[A]): List[List[List[A]]] =
