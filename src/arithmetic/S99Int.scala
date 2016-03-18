@@ -20,6 +20,11 @@ class S99Int(val start: Int) {
       result
     }
   }
+
+
+  def isCoprimeTo(i: Int): Boolean = S99Int.gcd(start, i) == 1
+
+
 }
 
 object S99Int {
@@ -28,8 +33,7 @@ object S99Int {
   def main(args: Array[String]) {
 //    println(234234239.isPrime)
 
-    println(gcd(36, 63))
-    println(gcd(63, 36))
+    println(35.isCoprimeTo(64))
   }
 
   /**
