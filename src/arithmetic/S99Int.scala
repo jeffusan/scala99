@@ -24,6 +24,11 @@ class S99Int(val start: Int) {
 
   def isCoprimeTo(i: Int): Boolean = S99Int.gcd(start, i) == 1
 
+  def totient: Int = {
+    val wrapped = new S99Int(start)
+    (1 to start).count(wrapped.isCoprimeTo )
+  }
+
 
 }
 
@@ -33,7 +38,8 @@ object S99Int {
   def main(args: Array[String]) {
 //    println(234234239.isPrime)
 
-    println(35.isCoprimeTo(64))
+//    println(35.isCoprimeTo(64))
+    println(10.totient)
   }
 
   /**
