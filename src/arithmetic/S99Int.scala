@@ -29,6 +29,10 @@ class S99Int(val start: Int) {
     (1 to start).count(wrapped.isCoprimeTo )
   }
 
+  def primeFactors: List[Int] = {
+    (1 to start).filter(start % _ == 0).filter(new S99Int(_).isPrime).toList
+  }
+
 
 }
 
@@ -39,7 +43,8 @@ object S99Int {
 //    println(234234239.isPrime)
 
 //    println(35.isCoprimeTo(64))
-    println(10.totient)
+//    println(10.totient)
+    println(315.primeFactors)
   }
 
   /**
