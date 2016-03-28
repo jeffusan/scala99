@@ -33,7 +33,35 @@ class S99Int(val start: Int) {
     (1 to start).filter(start % _ == 0).filter(new S99Int(_).isPrime).toList
   }
 
+  def primeFactorMultiplicity: Map[Int, Int] = {
+    // list of factors List[Int]
+    val factors1: List[Int] = factors(start)
 
+    factors1.foldLeft(Map[Int, Int]())((map, f) =>
+      if (new S99Int(f).isPrime) {
+        map.get(f) match {
+          case Some(m) =>
+            val count = m+1
+            map + (f -> count)
+          case _=> map + (f -> 1)
+        }
+      }else
+        map
+    )
+  }
+
+  def factors(n: Int): List[Int] = {
+    factorsR(n, 2, List[Int]())
+  }
+
+  def factorsR(n: Int, i: Int, result: List[Int]): List[Int] = {
+    if (n <= 1) result
+    else {
+      val x = n % i
+      if(x == 0) factorsR(n / i, i, i :: result)
+      else factorsR(n, i+1, result)
+    }
+  }
 }
 
 object S99Int {
@@ -44,7 +72,8 @@ object S99Int {
 
 //    println(35.isCoprimeTo(64))
 //    println(10.totient)
-    println(315.primeFactors)
+//    println(315.primeFactors)
+    println(315.primeFactorMultiplicity)
   }
 
   /**
