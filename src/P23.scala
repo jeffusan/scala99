@@ -4,17 +4,17 @@ object P23 {
   import P20.removeAt
 
   def main(args: Array[String]) {
-    println(randomSelect2(3, List('a, 'b, 'c, 'd, 'f, 'g, 'h)))
+    println(randomSelect(3, List('a, 'b, 'c, 'd, 'f, 'g, 'h)))
   }
 
-  def randomSelect2(x:Int, list: List[Symbol]): List[Symbol] = {
-    val array = new Array[Symbol](x)
-    val r = scala.util.Random
-    for (i <-0 until x ){
-      array(i) = list(r.nextInt(list.length))
-    }
-    array.toList
-  }
+//  def randomSelect2(x:Int, list: List[Symbol]): List[Symbol] = {
+//    val array = new Array[Symbol](x)
+//    val r = scala.util.Random
+//    for (i <-0 until x ){
+//      array(i) = list(r.nextInt(list.length))
+//    }
+//    array.toList
+//  }
 
   def randomSelect(x:Int, list: List[Symbol]): List[Symbol] = {
     if(x <= 0 ) Nil

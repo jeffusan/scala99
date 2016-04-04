@@ -62,6 +62,15 @@ class S99Int(val start: Int) {
       else factorsR(n, i+1, result)
     }
   }
+
+  def totient2: Int = {
+
+    primeFactorMultiplicity.foldLeft(1)( (r, m) => r * (m._1-1)* Math.pow(m._1, m._2 - 1).toInt)
+  }
+
+  def totient_solution: Int = new S99Int(start).primeFactorMultiplicity.foldLeft(1) { (r, f) =>
+    f match { case (p, m) => r * (p - 1) * Math.pow(p, m - 1).toInt }
+  }
 }
 
 object S99Int {
@@ -73,7 +82,10 @@ object S99Int {
 //    println(35.isCoprimeTo(64))
 //    println(10.totient)
 //    println(315.primeFactors)
-    println(315.primeFactorMultiplicity)
+//    println(315.primeFactorMultiplicity)
+
+    println(10090.totient2)
+    println(10090.totient_solution)
   }
 
   /**
