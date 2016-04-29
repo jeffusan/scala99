@@ -1,8 +1,10 @@
+import scala.collection.GenTraversableOnce
+
 object P26 {
 
   def main(args: Array[String]) {
 
-    val result = combinations2(3, List('a, 'b, 'c, 'd, 'e, 'f))
+    val result = combinations2(4, List('a, 'b, 'c, 'd, 'e, 'f))
     println(result)
     println(result.length)
 //    println(combinations(2, List('a, 'b, 'c)))
@@ -17,15 +19,26 @@ object P26 {
 
 //    println(" x: " + x + " list: " + list)
 
-    if (list.length <= 0 || x <= 0)
-      List()
+    if(list == Nil) Nil
+    else if (x == 0) List(Nil)
+    else if (x == 1 && list.length ==1) List(list)
 
-     else {
+    else {
       val head = list.head
       val rest = list.tail
-      val tmp: List[List[A]] = combinations2(x -1, rest)
-      val result = tmp.map ( comb => head::comb)
-      result ::: combinations2(x, rest)
+      val tmp: List[List[A]] = combinations2(x - 1, rest)
+//      println("tmp: " + tmp)
+
+      val result: List[List[A]] = tmp.map(comb => head :: comb)
+//      println("result: " + result)
+
+
+      val restComb = combinations2(x, rest)
+      val r = result ::: restComb
+//      println("final: " + r + " = " + result + " + " + restComb)
+
+      r
+
     }
   }
 
