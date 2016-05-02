@@ -13,7 +13,7 @@ class S99Int(val start: Int) {
 
       for (i <- 3 to sqrt.toInt by 2) {
         if (start % i == 0) {
-          println("divisible by " + i)
+//          println("divisible by " + i)
           result = false
         }
       }
@@ -84,8 +84,10 @@ object S99Int {
 //    println(315.primeFactors)
 //    println(315.primeFactorMultiplicity)
 
-    println(10090.totient2)
-    println(10090.totient_solution)
+//    println(10090.totient2)
+//    println(10090.totient_solution)
+
+    println(listPrimesinRange(7 to 31))
   }
 
   /**
@@ -106,8 +108,9 @@ object S99Int {
       val mod = j % i
       gcd(i, mod)
     }
+  }
 
-
-
+  def listPrimesinRange(range: Range): List[Int] = {
+    range.filter(_.isPrime).toList
   }
 }
