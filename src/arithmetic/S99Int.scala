@@ -71,6 +71,41 @@ class S99Int(val start: Int) {
   def totient_solution: Int = new S99Int(start).primeFactorMultiplicity.foldLeft(1) { (r, f) =>
     f match { case (p, m) => r * (p - 1) * Math.pow(p, m - 1).toInt }
   }
+
+  /**
+   * Goldbach's conjecture says that every positive even number greater than 2 is the sum of two prime numbers. E.g. 28 = 5 + 23.
+   * It is one of the most famous facts in number theory that has not been proved to be correct in the general case.
+   * It has been numerically confirmed up to very large numbers (much larger than Scala's Int can represent).
+   * Write a function to find the two prime numbers that sum up to a given even integer.
+   */
+  def goldbach: (Int, Int) = {
+    val range = 2 to start
+    val list = S99Int.listPrimesinRange(range)
+
+    var a = 0
+    var b = 0
+
+    var tmp0 = list
+
+    while (tmp0.nonEmpty && a == 0) {
+
+      var tmp1 = list
+      while (tmp1.nonEmpty && a == 0) {
+
+        if (tmp1.head + tmp0.head == start) {
+          a = tmp1.head
+          b = tmp0.head
+        } else
+          tmp1 = tmp1.tail
+      }
+
+      tmp0 = tmp0.tail
+    }
+
+    if(a!=0) (a,b)
+    else throw new Exception("not found")
+  }
+
 }
 
 object S99Int {
@@ -87,7 +122,8 @@ object S99Int {
 //    println(10090.totient2)
 //    println(10090.totient_solution)
 
-    println(listPrimesinRange(7 to 31))
+//    println(listPrimesinRange(7 to 31))
+    println(28.goldbach)
   }
 
   /**
