@@ -103,7 +103,7 @@ class S99Int(val start: Int) {
     }
 
     if(a!=0) (a,b)
-    else throw new Exception("not found")
+    else throw new Exception("not found for " + start)
   }
 
 }
@@ -123,7 +123,26 @@ object S99Int {
 //    println(10090.totient_solution)
 
 //    println(listPrimesinRange(7 to 31))
-    println(28.goldbach)
+//    println(28.goldbach)
+
+//    printGoldbachList(9 to 20)
+
+    printGoldbachListLimited(3 to 2000, 50)
+  }
+
+  def printGoldbachList(range: Range) = {
+    range.filter(_ % 2 == 0).foreach(x => {
+      val g = x.goldbach
+      println(x + " = " + g._2 + " + " + g._1)
+    })
+  }
+
+  def printGoldbachListLimited(range: Range, limit: Int) = {
+    range.filter(_ % 2 == 0).foreach(x => {
+      val g = x.goldbach
+      if(g._2 >= limit)
+        println(x + " = " + g._2 + " + " + g._1)
+    })
   }
 
   /**
