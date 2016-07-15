@@ -1,12 +1,55 @@
 package binarytree
 
-sealed abstract class Tree[+T]
+sealed abstract class Tree[+T] {
+  def isSymmetric: Boolean
+  def isMirrorOf[V](tree: Tree[V]): Boolean
+  def addValue[U](x: Any): Tree[Any]
+
+}
 
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T] {
+
+  def isSymmetric: Boolean = left.isMirrorOf(right)
+
+  def isMirrorOf[V](tree: Tree[V]): Boolean = {
+    tree match {
+      case node : Node[V] =>  left.isMirrorOf(node.right) && right.isMirrorOf(node.left)
+      case _ => false
+    }
+  }
+
+  def addValue[U](x: Any): Tree[Any] = {
+
+    // assumption: nodes are added on the left first: if a tree is not symmetric, then the left node has more nodes
+    if (isSymmetric) {
+      left match {
+        case node: Node[U] => Node(value, node.addValue(x), right)
+        case _ => Node(value, Node(x, End, End), End)
+      }
+    } else {
+      right match {
+        case node: Node[U] => Node(value, left, right.addValue(x))
+        case _ => Node(value, left, Node(x, End, End))
+      }
+    }
+    // decide where to add, right most first
+    // recursively copy current starting from bottom and new node
+  }
+
   override def toString = "T(" + value.toString + " " + left.toString + " " + right.toString + ")"
 }
 
 case object End extends Tree[Nothing] {
+
+  def isSymmetric: Boolean = true
+
+  def isMirrorOf[V](tree: Tree[V]): Boolean = tree match {
+    case End => true
+    case _ => false
+  }
+
+  def addValue[U](x: Any): Tree[Any] = Node(x, End, End)
+
   override def toString = "."
 }
 
@@ -18,13 +61,29 @@ object Tree {
 
   def main(args: Array[String]) {
 
-//    println(nodeNumberFor(2))
-//    println(0 / 2 +1)
-//    println(7 / 2)
-//    println(0 % 2)
-//    println(buildPerfectTree(2, "x", 1))
-    println(cBalanced(10, ""))
+//    val tree = cBalanced(3, "")
+//    println(tree)
+//    println(tree.head.isSymmetric)
+//
+//    val tree2 = cBalanced(4, "")
+//    println(tree2)
+//    println(tree2.head.isSymmetric)
 
+//    val a = End.addValue(2)
+//    println(a)
+//    val b = a.addValue(3)
+//    println(b)
+//    val c = b.addValue(9)
+//    println(c)
+//    val d = c.addValue(4)
+//    println(d)
+
+    println(Tree.fromList(List(3, 2, 5, 7, 1)))
+
+  }
+
+  def fromList[T](list: List[T]): Tree[Any] = {
+    list.foldLeft(End: Tree[Any])((node, value) => node.addValue(value))
   }
 
   def cBalanced(n: Int, value: String): List[Node[String]] = {
@@ -42,6 +101,11 @@ object Tree {
 
     List(buildPerfectTree(levels, value, remainingNodes))
 
+  }
+
+  def isSymmetric[T](tree: Tree[T]): Boolean = {
+
+    false
   }
 
   def buildPerfectTree[T](level: Int, value: T, remaining: Int): Node[T] =
