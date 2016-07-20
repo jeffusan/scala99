@@ -78,8 +78,21 @@ object Tree {
 //    val d = c.addValue(4)
 //    println(d)
 
-    println(Tree.fromList(List(3, 2, 5, 7, 1)))
+//    println(Tree.fromList(List(3, 2, 5, 7, 1)))
 
+    heightBalancedTrees(3, "").foreach(println(_))
+
+  }
+
+  def heightBalancedTrees[T](i: Int, value: T): List[Tree[T]] = {
+    if (i == 1 ) List(Node(value, End, End))
+    else if(i == 2) List(Node(value, Node(value, End, End), Node(value, End, End)), Node(value, Node(value, End, End), End), Node(value, End, Node(value, End, End)))
+    else {
+//      Node(value, heightBalancedTrees(i - 1, value), heightBalancedTrees(i - 1, value))
+      heightBalancedTrees(i - 1, value).flatMap(subLeft =>
+        heightBalancedTrees(i - 1, value).map(subRight => Node(value, subLeft, subRight))
+      )
+    }
   }
 
   def fromList[T](list: List[T]): Tree[Any] = {
@@ -101,11 +114,6 @@ object Tree {
 
     List(buildPerfectTree(levels, value, remainingNodes))
 
-  }
-
-  def isSymmetric[T](tree: Tree[T]): Boolean = {
-
-    false
   }
 
   def buildPerfectTree[T](level: Int, value: T, remaining: Int): Node[T] =
