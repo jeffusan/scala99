@@ -81,17 +81,29 @@ object Tree {
 //    println(Tree.fromList(List(3, 2, 5, 7, 1)))
 
     heightBalancedTrees(3, "").foreach(println(_))
+    println("**********")
+    hbalTrees(3, "").foreach(println(_))
 
   }
 
-  def heightBalancedTrees[T](i: Int, value: T): List[Tree[T]] = {
-    if (i == 1 ) List(Node(value, End, End))
-    else if(i == 2) List(Node(value, Node(value, End, End), Node(value, End, End)), Node(value, Node(value, End, End), End), Node(value, End, Node(value, End, End)))
-    else {
-//      Node(value, heightBalancedTrees(i - 1, value), heightBalancedTrees(i - 1, value))
-      heightBalancedTrees(i - 1, value).flatMap(subLeft =>
-        heightBalancedTrees(i - 1, value).map(subRight => Node(value, subLeft, subRight))
-      )
+  def heightBalancedTrees[T](i: Int, value: T): List[Tree[T]] = i match {
+    case n if n < 1 => List(End)
+    case  1 => List(Node(value, End, End))
+    case _ =>
+      val high = heightBalancedTrees(i - 1, value)
+      val low = heightBalancedTrees(i -2, value)
+      high.flatMap(l => high.map( r => Node(value, l, r))) :::
+        high.flatMap(h => low.flatMap(l => List(Node(value, h, l), Node(value, l, h))))
+  }
+
+  def hbalTrees[T](height: Int, value: T): List[Tree[T]] = height match {
+    case n if n < 1 => List(End)
+    case 1          => List(Node(value))
+    case _ => {
+      val fullHeight = hbalTrees(height - 1, value)
+      val short = hbalTrees(height - 2, value)
+      fullHeight.flatMap((l) => fullHeight.map((r) => Node(value, l, r))) :::
+        fullHeight.flatMap((f) => short.flatMap((s) => List(Node(value, f, s), Node(value, s, f))))
     }
   }
 
