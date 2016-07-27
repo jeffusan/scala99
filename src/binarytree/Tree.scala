@@ -80,10 +80,21 @@ object Tree {
 
 //    println(Tree.fromList(List(3, 2, 5, 7, 1)))
 
-    heightBalancedTrees(3, "").foreach(println(_))
-    println("**********")
-    hbalTrees(3, "").foreach(println(_))
+//    heightBalancedTrees(4, "").foreach(println(_))
 
+    println(minHbalNodes(2))
+    println(minHbalNodes(3))
+    println(minHbalNodes(4))
+    println(minHbalNodes(5))
+
+
+  }
+
+  def minHbalNodes(height: Int): Int = height match {
+    case n if n < 1 => 0
+    case 1 => 1
+    case 2 => 2
+    case _ => 1 + minHbalNodes(height - 1) + minHbalNodes(height - 2)
   }
 
   def heightBalancedTrees[T](i: Int, value: T): List[Tree[T]] = i match {
