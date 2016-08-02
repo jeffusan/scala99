@@ -82,12 +82,21 @@ object Tree {
 
 //    heightBalancedTrees(4, "").foreach(println(_))
 
-    println(minHbalNodes(2))
-    println(minHbalNodes(3))
-    println(minHbalNodes(4))
-    println(minHbalNodes(5))
+//    println(minHbalNodes(5))
 
+    println(3/2)
 
+    (2 to 16).foreach(i => println(i + ": " + maxHeightFromNodes(i)))
+
+//    val value = "test"
+//    println("%s=%.2s%s" format("password", value, value.substring(value.length).padTo(value.length - 1, "*").mkString))
+  }
+
+  def maxHeightFromNodes(nodes: Int): Int = nodes match {
+    case n if n < 1 => 0
+    case 1 => 1
+    case 2 => 2
+    case n => 1 + maxHeightFromNodes(n/2)
   }
 
   def minHbalNodes(height: Int): Int = height match {
