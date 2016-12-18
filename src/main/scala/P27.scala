@@ -1,4 +1,3 @@
-
 object P27 {
 
   import P26.combinations
