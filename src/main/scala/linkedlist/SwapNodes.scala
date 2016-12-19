@@ -28,34 +28,8 @@ object SwapNodes {
 
 
 
-    println(compareLists(Node.buildFromArray(Array(1)), null))
+//    println(compareLists(Node.buildFromArray(Array(1)).get, null))
 
-  }
-
-  def compareLists(a: Node, b: Node): Boolean = {
-    Option(a) match {
-      case None => Option(b).isEmpty
-      case Some(n) => Option(b) match {
-        case None => false
-        case Some(m) =>
-          var i = n
-          var j = m
-          var dataMatch = i.data == j.data
-          while(Option(i.next).isDefined && dataMatch) {
-            dataMatch = Option(j).isDefined && i.data == j.data
-            i = i.next
-            j = j.next
-          }
-          dataMatch
-      }
-    }
-  }
-
-  def length(n: Node): Int = {
-    var l = 0
-    while (Option(n.next).isDefined)
-      l = l + 1
-    l
   }
 
 }
