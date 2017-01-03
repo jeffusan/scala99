@@ -1,6 +1,6 @@
 package linkedlist
 
-import org.scalactic.Equality
+import org.scalactic.{Equality, Prettifier}
 import org.scalatest.{FlatSpec, Matchers}
 
 class SwapNodesSpec extends FlatSpec with Matchers {
@@ -10,6 +10,12 @@ class SwapNodesSpec extends FlatSpec with Matchers {
     override def areEqual(a: Node, b: Any): Boolean = (a, b) match {
       case (m: Node, n: Node) => Node.compareLists(m,n)
       case _ => false
+    }
+  }
+
+  implicit val prettifier = new Prettifier {
+    def apply(o: Any): String = o match {
+      case n: Node => Node.printList(n)
     }
   }
 
@@ -165,6 +171,28 @@ class SwapNodesSpec extends FlatSpec with Matchers {
     val result = SwapNodes.swapNodes(input, 2, 3)
 
     result shouldEqual input
+  }
+
+  // (1, 2, 1, 2, 3, 1) , 2, 3 => (1, 3, 1, 2, 2, 1)
+  "Swapping elements when first appears multiple times " should
+    "swap the first found element" in {
+    val input = Node.buildFromArray(Array(1, 2, 1, 2, 3, 1)).get
+    val expected = Node.buildFromArray(Array(1, 3, 1, 2, 2, 1)).get
+
+    val result = SwapNodes.swapNodes(input, 2, 3)
+
+    result shouldEqual expected
+  }
+
+  // (1, 2, 1, 3, 3, 1) , 2, 3 => (1, 3, 1, 2, 3, 1)
+  "Swapping elements when second appears multiple times " should
+    "swap the first found element" in {
+    val input = Node.buildFromArray(Array(1, 2, 1, 3, 3, 1)).get
+    val expected = Node.buildFromArray(Array(1, 3, 1, 2, 3, 1)).get
+
+    val result = SwapNodes.swapNodes(input, 2, 3)
+
+    result shouldEqual expected
   }
 
 }

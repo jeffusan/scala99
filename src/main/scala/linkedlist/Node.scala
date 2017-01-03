@@ -46,7 +46,7 @@ object Node {
     }
   }
 
-  def printList(head: Node): Unit = {
+  def printList(head: Node): String = {
     var n = head
     val b = new StringBuilder
     while(n != null){
@@ -55,7 +55,8 @@ object Node {
         b.append(", ")
       n = n.next
     }
-    println(b.toString())
+//    println(b.toString())
+    b.toString()
   }
 
   def main(args: Array[String]): Unit = {
