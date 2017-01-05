@@ -13,7 +13,6 @@ object SwapNodes {
     if(contains(head, x) && contains(head, y)) {
       swapExistingElements(head, x, y)
     } else {
-      println("lol elements not in list")
       head
     }
   }
@@ -27,8 +26,19 @@ object SwapNodes {
     head.data match {
       case a if a == x => swapHead(head, y)
       case b if b == y => swapHead(head, x)
-      case _ => head
+      case _ => swapNonHead(head, x, y)
     }
+  }
+
+  /**
+    * assumes:
+    * list not null
+    * elements to swap in list
+    * head does not contain one of the element to swap
+    */
+  private def swapNonHead(head: Node, x: Int, y: Int): Node = {
+    val xReplacedByY = buildAndReplace(head, x, y)
+    buildAndReplaceSecondOccurence(xReplacedByY, y, x)
   }
 
   /**
@@ -53,6 +63,29 @@ object SwapNodes {
           new Node(y, copy(node.next))
         else
           new Node(node.data, buildAndReplace(node.next, x, y))
+
+    ).getOrElse(n)
+  }
+
+  /**
+    * replaces the second element found with the x value, with the y value
+    */
+  private def buildAndReplaceSecondOccurence(n: Node, x: Int, y: Int): Node = {
+    buildAndReplaceSecondOccurence(n, x, y, false)
+  }
+
+  /**
+    * replaces the second element found with the x value, with the y value
+    */
+  private def buildAndReplaceSecondOccurence(n: Node, x: Int, y: Int, second: Boolean): Node = {
+    Option(n).map(
+      node =>
+        if(node.data == x && second)
+          new Node(y, copy(node.next))
+        else if(node.data == x && !second)
+          new Node(node.data, buildAndReplaceSecondOccurence(node.next, x, y, true))
+        else
+          new Node(node.data, buildAndReplaceSecondOccurence(node.next, x, y, second))
 
     ).getOrElse(n)
   }
