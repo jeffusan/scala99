@@ -195,4 +195,13 @@ class SwapNodesSpec extends FlatSpec with Matchers {
     result shouldEqual expected
   }
 
+  // (2, 3, 1) , 3, 3 => (2, 3, 1)
+  "Swapping with same element to swap" should "not swap" in {
+    val input = Node.buildFromArray(Array(2, 3, 1)).get
+
+    val result = SwapNodes.swapNodes(input, 3, 3)
+
+    result shouldEqual input
+  }
+
 }

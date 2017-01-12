@@ -2,6 +2,9 @@ package linkedlist
 
 object SwapNodes {
 
+  /**
+    * O(n)
+    */
   def swapNodes(head: Node, x: Int, y: Int): Node = {
     Option(head) match {
       case None => head
@@ -55,6 +58,10 @@ object SwapNodes {
 
   /**
     * replaces the first element found with the x value, with the y value
+    *
+    * note: difficult to use tail recursion because it's a simple linkedlist
+    * we need to reach the last element in order to build the second to last
+    * and build the new list "backwards"
     */
   private def buildAndReplace(n: Node, x: Int, y: Int): Node = {
     Option(n).map(
