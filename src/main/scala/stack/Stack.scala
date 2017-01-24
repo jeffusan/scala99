@@ -1,17 +1,19 @@
 package stack
 
-class Stack(val capacity: Int) {
+import scala.reflect.ClassTag
+
+class Stack[T: ClassTag](val capacity: Int) {
 
   import Failure._
 
-  protected val array = new Array[Int](capacity)
+  protected val array = new Array[T](capacity)
 
   protected var top: Int = -1
 
   /**
     * O(1)
     */
-  def push(e: Int): Either[Failure, Success] = {
+  def push(e: T): Either[Failure, Success] = {
     if(top >= capacity ) Left(Failure(overflow))
     else {
       top+=1
@@ -22,7 +24,7 @@ class Stack(val capacity: Int) {
     }
   }
 
-  def pop(): Either[Failure, Int]= {
+  def pop(): Either[Failure, T]= {
     if(top < 0) Left(Failure(underflow))
     else {
 //      println("poping at " + top + ": " + array(top))
@@ -32,7 +34,7 @@ class Stack(val capacity: Int) {
     }
   }
 
-  def peek(): Either[Failure, Int] = {
+  def peek(): Either[Failure, T] = {
     if(top < 0) Left(Failure(empty))
     else {
       Right(array(top))
