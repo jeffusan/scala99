@@ -19,7 +19,14 @@ class InfixToPostfix(val capacity: Int) {
           if(c == rightParenthesis) {
             //pop stack until left parenthesis
 
+            while (stack.peek().right.get != leftParenthesis) {
+              builder.append(stack.pop().right.get)
+            }
+            //remove left parenthesis
+            stack.pop()
 
+          } else if(c == leftParenthesis) {
+            stack.push(c)
 
           } else if(lowerPrecedence.contains(c)) {
             while (stack.peek().isRight && higherPrecedence.contains(stack.peek().right.get)) {
@@ -48,7 +55,7 @@ class InfixToPostfix(val capacity: Int) {
 
 object InfixToPostfix {
   val lowerPrecedence = Array('+', '-')
-  val higherPrecedence = Array('*', '/')
+  val higherPrecedence = Array('*', '/', '^')
   val leftParenthesis = '('
   val rightParenthesis = ')'
 
