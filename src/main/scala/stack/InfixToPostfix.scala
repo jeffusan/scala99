@@ -1,5 +1,7 @@
 package stack
 
+//import Stack
+
 class InfixToPostfix(val capacity: Int) {
 
   import InfixToPostfix._
@@ -10,7 +12,7 @@ class InfixToPostfix(val capacity: Int) {
     else {
 
       val builder = new StringBuilder()
-      val stack = new Stack[Char](capacity)
+      val stack = new Stack[Char](new Array[Char](capacity))
 
       val chars = input.toCharArray
 
@@ -22,7 +24,7 @@ class InfixToPostfix(val capacity: Int) {
             while (stack.peek().right.get != leftParenthesis) {
               builder.append(stack.pop().right.get)
             }
-            //remove left parenthesis
+            //remove left parenthesisx
             stack.pop()
 
           } else if(c == leftParenthesis) {
@@ -48,8 +50,6 @@ class InfixToPostfix(val capacity: Int) {
       Right(builder.toString)
     }
   }
-
-//  def checkAndPopUntil
 
 }
 
