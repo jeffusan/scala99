@@ -82,7 +82,7 @@ object MyModule {
         //    println(isSorted(Array(1,4,3), compare))
 
         println(findFirst(Array(1,2,3), (x: Int) => x == 2))
-      }
+//      }
   }
 
 }
