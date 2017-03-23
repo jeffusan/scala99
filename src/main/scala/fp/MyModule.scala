@@ -1,4 +1,4 @@
-//package training
+package fp
 
 object MyModule {
 
@@ -74,6 +74,12 @@ object MyModule {
     (a: A, b: B) => f(a)(b)
   }
 
+  def compose[A,B,C](f: B => C, g: A => B): A => C = {
+    (a: A) => f(g(a))
+  }
+
+
+
 
   def main(args: Array[String]) {
 
@@ -81,8 +87,27 @@ object MyModule {
         //    println(isSorted(Array(1,2,3), compare))
         //    println(isSorted(Array(1,4,3), compare))
 
-        println(findFirst(Array(1,2,3), (x: Int) => x == 2))
-      }
+//        println(findFirst(Array(1,2,3), (x: Int) => x == 2))
+
+//        val res = List(1,2,3,4,5) match {
+//          case Cons(x, Cons(2, Cons(4, _))) => x
+//          case Nil => 42
+//          case Cons(x, Cons(y, Cons(3, Cons(4, _)))) => x + y
+//          case Cons(h, t) => h + List.sum(t)
+//          case _ => 101
+//        }
+//
+//    println(res)
+
+    println("^-+".r.replaceAllIn("---openid", ""))
+    println("-+$".r.replaceAllIn("openid-", ""))
+    println("-+$".r.replaceAllIn("openid--", ""))
+    println("-+$".r.replaceAllIn("openid----", ""))
+
+
+
+
+
   }
 
 }
