@@ -86,7 +86,7 @@ object MyModule {
         //    def compare(i: Int, j: Int): Boolean = i<j
         //    println(isSorted(Array(1,2,3), compare))
         //    println(isSorted(Array(1,4,3), compare))
-
+    
 //        println(findFirst(Array(1,2,3), (x: Int) => x == 2))
 
 //        val res = List(1,2,3,4,5) match {
@@ -99,15 +99,7 @@ object MyModule {
 //
 //    println(res)
 
-    println("^-+".r.replaceAllIn("---openid", ""))
-    println("-+$".r.replaceAllIn("openid-", ""))
-    println("-+$".r.replaceAllIn("openid--", ""))
-    println("-+$".r.replaceAllIn("openid----", ""))
-
-
-
-
-
+        println(findFirst(Array(1,2,3), (x: Int) => x == 2))
   }
 
 }
