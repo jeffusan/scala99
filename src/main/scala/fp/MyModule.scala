@@ -99,7 +99,11 @@ object MyModule {
 //
 //    println(res)
 
-        println(findFirst(Array(1,2,3), (x: Int) => x == 2))
+//        println(findFirst(Array(1,2,3), (x: Int) => x == 2))
+
+//    println(List.foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_)))
+
+    println(List.length(List(1,2,3)))
   }
 
 }
