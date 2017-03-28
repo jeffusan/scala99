@@ -103,7 +103,10 @@ object MyModule {
 
 //    println(List.foldRight(List(1,2,3), Nil:List[Int])(Cons(_,_)))
 
-    println(List.length(List(1,2,3)))
+    val list = List(1,2,3)
+    println(List.length3(list))
+    println(List.sum3(list))
+    println(List.product3(List(1,2,3)))
   }
 
 }
