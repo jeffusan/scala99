@@ -51,6 +51,12 @@ object List {
       case Cons(x, xs) => f(x, foldRight(xs, z)(f))
     }
 
+  def foldRightViaLeft[A,B](as: List[A], z: B)(f: (A, B) => B): B =
+    foldLeft(reverse(as), z)((b,a) => f(a,b))
+
+  def foldRightViaFoldLeft_1[A,B](l: List[A], z: B)(f: (A,B) => B): B =
+    foldLeft(l, (b:B) => b)((g,a) => b => g(f(a,b)))(z)
+
   def foldLeft[A,B](as: List[A], z: B)(f: (B, A) => B): B = as match {
     case Nil => z
     case Cons(h, t) => foldLeft(t, f(z, h))(f)
@@ -80,6 +86,14 @@ object List {
 
   def append[A](a: A, l: List[A]): List[A] = {
     foldLeft(reverse(l), Cons(a, Nil))((r, e) => Cons(e, r))
+  }
+
+  def concatenate[A](l: List[List[A]]): List[A] = {
+    foldLeft(l, List[A]())((r, list) => foldLeft(list, r)((re, a) => append(a, re)))
+  }
+
+  def addOne(l: List[Int]): List[Int] = {
+    foldLeft(l, List[Int]())((l, e) => append(e +1 , l))
   }
 
 
