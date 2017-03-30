@@ -96,6 +96,14 @@ object List {
     foldLeft(l, List[Int]())((l, e) => append(e +1 , l))
   }
 
+  /**
+    * Write a function that turns each value in a List[Double] into a String.
+    * You can use the expression d.toString to convert some d: Double to a String
+    */
+  def doubleListToString(l: List[Double]): List[String] = {
+    List.foldLeft(l, List[String]())((r,d) => append(d.toString, r))
+  }
+
 
 
 }

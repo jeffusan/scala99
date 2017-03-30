@@ -55,4 +55,9 @@ class ListSpec  extends FlatSpec with Matchers {
     List.foldRightViaFoldLeft_1(l, "")((e, s) => s + e) shouldBe "cba"
   }
 
+  "double to string" should "be in normal order" in {
+    val l = List(1.0, 2.0, 3.0)
+    List.doubleListToString(l) shouldBe List("1.0","2.0","3.0")
+  }
+
 }
