@@ -104,6 +104,31 @@ object List {
     List.foldLeft(l, List[String]())((r,d) => append(d.toString, r))
   }
 
+  def map[A,B](as: List[A])(f: A => B): List[B] = {
+    List.foldLeft(reverse(as), List[B]())((l, e) => Cons(f(e), l))
+  }
+
+  def doubleListToStringWithMap(l: List[Double]): List[String] = {
+    map(l)(_.toString)
+  }
+
+  /**
+    * Write a function filter that removes elements from a list unless they satisfy a given predicate.
+    * Use it to remove all odd numbers from a List[Int].
+    */
+  def filter[A](as: List[A])(f: A => Boolean): List[A] = {
+    foldLeft(reverse(as), List[A]())((l,e) => if (f(e)) { Cons(e, l) } else { l } )
+  }
+
+  /**
+    * Write a function flatMap that works like map except that the function given
+    * will return a list instead of a single result, and that list should be inserted into the final resulting list.
+    */
+  def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] = {
+    foldLeft(reverse(as), List[B]())((l,e) => foldLeft(reverse(f(e)), l)((tl, te) => Cons(te, tl)))
+  }
+
+
 
 
 }

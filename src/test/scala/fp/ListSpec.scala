@@ -60,4 +60,20 @@ class ListSpec  extends FlatSpec with Matchers {
     List.doubleListToString(l) shouldBe List("1.0","2.0","3.0")
   }
 
+  "double to string" should "be in normal order with map" in {
+    val l = List(1.0, 2.0, 3.0)
+    List.doubleListToStringWithMap(l) shouldBe List("1.0","2.0","3.0")
+  }
+
+  "filter" should "filter elements NOT matching the function" in {
+    val l = List(1, 2, 3)
+    def oddCheck(i: Int): Boolean = i % 2 == 1
+    List.filter(l)(oddCheck) shouldBe List(1, 3)
+  }
+
+  "flatMap" should "return a list instead of a single result, and that list should be inserted into the final resulting list" in {
+    val l = List(1, 2, 3)
+    List.flatMap(l)(i => List(i,i)) shouldBe List(1,1,2,2,3,3)
+  }
+
 }
