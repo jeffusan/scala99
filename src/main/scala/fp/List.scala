@@ -88,7 +88,7 @@ object List {
     foldLeft(reverse(l), Cons(a, Nil))((r, e) => Cons(e, r))
   }
 
-  def concatenate[A](l: List[List[A]]): List[A] = {
+  def concat[A](l: List[List[A]]): List[A] = {
     foldLeft(l, List[A]())((r, list) => foldLeft(list, r)((re, a) => append(a, re)))
   }
 
@@ -125,10 +125,24 @@ object List {
     * will return a list instead of a single result, and that list should be inserted into the final resulting list.
     */
   def flatMap[A,B](as: List[A])(f: A => List[B]): List[B] = {
-    foldLeft(reverse(as), List[B]())((l,e) => foldLeft(reverse(f(e)), l)((tl, te) => Cons(te, tl)))
+    concat(map(as)(f))
   }
 
+  def filterFlatMap[A](as: List[A])(f: A => Boolean): List[A] = {
+    flatMap(as)( a => if (f(a)) List[A](a) else Nil )
+  }
 
+  def add(l: List[Int], k: List[Int]): List[Int] = (l,k) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(i, t), Cons(j, u)) => Cons(i + j, add(t, u))
+  }
+
+  def zipWith[A,B,C](l: List[A], k: List[B])(f: (A,B) => C): List[C] = (l,k) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(i, t), Cons(j, u)) => Cons(f(i, j), zipWith(t, u)(f))
+  }
 
 
 }

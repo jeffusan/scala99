@@ -27,7 +27,7 @@ class ListSpec  extends FlatSpec with Matchers {
 
   "concatenate lists" should "create list" in {
     val l = List(List(1,2),List(3,4),List(5,6))
-    List.concatenate(l) shouldBe List(1, 2, 3, 4, 5, 6)
+    List.concat(l) shouldBe List(1, 2, 3, 4, 5, 6)
   }
 
   "add one" should "create list adding1 to each element" in {
@@ -74,6 +74,25 @@ class ListSpec  extends FlatSpec with Matchers {
   "flatMap" should "return a list instead of a single result, and that list should be inserted into the final resulting list" in {
     val l = List(1, 2, 3)
     List.flatMap(l)(i => List(i,i)) shouldBe List(1,1,2,2,3,3)
+  }
+
+  "filter flatMap" should "filter elements NOT matching the function" in {
+    val l = List(1, 2, 3)
+    def oddCheck(i: Int): Boolean = i % 2 == 1
+    List.filterFlatMap(l)(oddCheck) shouldBe List(1, 3)
+  }
+
+  "adding 2 list" should "add values" in {
+    val l = List(1, 2, 3)
+    val k = List(4, 5, 6)
+    List.add(l, k) shouldBe List(5, 7, 9)
+  }
+
+  "adding 2 list using zipWith" should "add values" in {
+    val l = List(1, 2, 3)
+    val k = List(4, 5, 6)
+    def f: (Int,Int) => Int = _+_
+    List.zipWith(l, k)(f) shouldBe List(5, 7, 9)
   }
 
 }
