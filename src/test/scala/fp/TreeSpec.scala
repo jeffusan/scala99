@@ -44,4 +44,16 @@ class TreeSpec extends FlatSpec with Matchers {
     Tree.depth(t) shouldBe 4
   }
 
+  "map on a leaf" should "apply to the value" in {
+    def f: Int => Int = _ + 1
+    val t = Leaf(1)
+    Tree.map(f, t) shouldBe Leaf(2)
+  }
+
+  "map on a 3 tree" should "be apply on leaves" in {
+    def f: Int => Int = _ + 1
+    val t = Branch(Branch(Leaf(0), Leaf(7)), Branch(Leaf(5), Leaf(2)))
+    Tree.map(f, t) shouldBe Branch(Branch(Leaf(1), Leaf(8)), Branch(Leaf(6), Leaf(3)))
+  }
+
 }
