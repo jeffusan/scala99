@@ -20,7 +20,7 @@ object Tree {
   }
 
   def depth[A](tree: Tree[A]): Int = tree match {
-    case l: Leaf[Int] => 1
-    case b: Branch[Int] => (1 + depth(b.left)) max (1 + depth(b.right))
+    case Leaf(_) => 1
+    case Branch(l,r) => 1 + (depth(l) max depth(r))
   }
 }
