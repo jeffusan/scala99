@@ -1,5 +1,6 @@
-package fp
+package scala.fp.datastructure
 
+import fp.datastructure.{Branch, Leaf, Tree}
 import org.scalatest.{FlatSpec, Matchers}
 
 class TreeSpec extends FlatSpec with Matchers {

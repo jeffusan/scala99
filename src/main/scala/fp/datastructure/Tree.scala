@@ -1,4 +1,4 @@
-package fp
+package fp.datastructure
 
 sealed trait Tree[+A]
 case class Leaf[A](value: A) extends Tree[A]
@@ -34,8 +34,8 @@ object Tree {
     case Branch(l,r) => f(fold(l, z)(f),fold(r, z)(f))
   }
 
-  def mapViaFold[A,B](tree: Tree[A], f:A => B): Tree[B] = {
-    fold(tree, a => Leaf(f(a)): Tree[B])(Branch(_,_))
-  }
+//  def mapViaFold[A,B](tree: Tree[A], f:A => B): Tree[B] = {
+//    fold(tree, a => Leaf(f(a)): Tree[B])(Branch(_,_))
+//  }
 
 }

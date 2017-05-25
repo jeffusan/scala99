@@ -1,4 +1,4 @@
-package fp
+package fp.datastructure
 
 import org.scalatest.{FlatSpec, Matchers}
 
