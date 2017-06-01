@@ -50,6 +50,13 @@ trait Option[+A] {
     a.flatMap(someA => b.map(someB => f(someA, someB)))
   }
 
+  def map2For[B,C,D](b: Option[B], c: Option[C])(f: (B,C) => D): Option[D] = {
+    for {
+      bb <- b
+      cc <- c
+    } yield f(bb, cc)
+  }
+
   def sequence0[A](a: Option[A]): Option[datastructure.List[A]] = {
     a.map(datastructure.List(_))
   }
