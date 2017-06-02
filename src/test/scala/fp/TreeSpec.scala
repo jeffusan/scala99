@@ -29,4 +29,19 @@ class TreeSpec extends FlatSpec with Matchers {
     Tree.max(t) shouldBe 10
   }
 
+  "depth tree single node" should "be 1" in {
+    val t = Leaf(7)
+    Tree.depth(t) shouldBe 1
+  }
+
+  "depth tree height 3" should "be 3" in {
+    val t = Branch(Branch(Leaf(1), Leaf(9)), Branch(Leaf(2), Leaf(7)))
+    Tree.depth(t) shouldBe 3
+  }
+
+  "depth tree height 4" should "be 4" in {
+    val t = Branch(Branch(Branch(Leaf(1), Leaf(9)), Branch(Leaf(2), Leaf(7))), Leaf(10))
+    Tree.depth(t) shouldBe 4
+  }
+
 }

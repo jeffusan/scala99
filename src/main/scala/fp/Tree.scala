@@ -18,4 +18,14 @@ object Tree {
     case l: Leaf[Int] => l.value
     case b: Branch[Int] => max(b.left) max max(b.right)
   }
+
+  def depth[A](tree: Tree[A]): Int = {
+
+    def go(tree: Tree[A], d: Int): Int = tree match {
+      case l: Leaf[A] => d + 1
+      case b: Branch[A] => go(b.left, d + 1) max go(b.right, d + 1)
+    }
+
+    go(tree, 0)
+  }
 }
