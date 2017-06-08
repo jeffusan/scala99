@@ -1,6 +1,6 @@
-object P28 {
+package scala99
 
-  import P10.encode
+object P28 {
 
 //  (**) Sorting a list of lists according to length of sublists.
 //    a) We suppose that a list contains elements that are lists themselves. The objective is to sort the elements of the list according to their length. E.g. short lists first, longer lists later, or vice versa.

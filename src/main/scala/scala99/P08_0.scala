@@ -1,3 +1,5 @@
+package scala99
+
 object P08_0 {
 
   def main(args: Array[String]) {

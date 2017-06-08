@@ -1,3 +1,5 @@
+package scala99
+
 object P10 {
   import P09.pack
 

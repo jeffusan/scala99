@@ -1,3 +1,5 @@
+package scala99
+
 object P25 {
 
   import P23.randomSelect

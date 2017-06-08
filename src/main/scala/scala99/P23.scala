@@ -1,7 +1,8 @@
+package scala99
+
 object P23 {
 
-  import P20.removeAtInt
-  import P20.removeAt
+  import P20.{removeAt, removeAtInt}
 
   def main(args: Array[String]) {
     println(randomSelect(3, List('a, 'b, 'c, 'd, 'f, 'g, 'h)))

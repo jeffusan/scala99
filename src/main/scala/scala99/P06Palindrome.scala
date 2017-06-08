@@ -1,3 +1,5 @@
+package scala99
+
 object P06Palindrome {
 
   def main(args: Array[String]) {

@@ -1,3 +1,5 @@
+package scala99
+
 object P11 {
   import P09.pack
   def main(args: Array[String]) {

@@ -1,3 +1,5 @@
+package scala99
+
 object P04 {
   def main(args: Array[String]) {
     println(length(0, List(1,2,3)))

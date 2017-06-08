@@ -1,3 +1,5 @@
+package scala99
+
 object P27 {
 
   import P26.combinations
