@@ -110,7 +110,9 @@ sealed trait Stream[+A] {
     foldRight(s)((a, b) => cons(a, b))
   }
 
-
+  def flatMap[B](f: A => Stream[B]): Stream[B] = {
+    foldRight(empty[B])((h,t) => f(h).append(t))
+  }
 
 }
 case object Empty extends Stream[Nothing]
@@ -128,5 +130,21 @@ object Stream {
 
   def apply[A](as: A*): Stream[A] = {
     if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
+  }
+
+  def constant[A](a: A): Stream[A] = cons(a, constant(a))
+
+  def from(n: Int): Stream[Int] = cons(n, from(n +1 ))
+
+  def fibs(): Stream[Int] = {
+    def go(i: Int, j: Int): Stream[Int] = {
+      cons(i, go(j, i +j))
+    }
+    go(0,1)
+  }
+
+
+  def unfold[A, S](z: S)(f: S => Option[(A, S)]): Stream[A] = {
+    
   }
 }

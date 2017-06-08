@@ -36,5 +36,20 @@ class StreamSpec extends FlatSpec with Matchers {
     result.toList shouldBe List(1,2,3)
   }
 
+  "constant" should "generate infinite stream" in {
+    val result = Stream.constant(9).take(3)
+    result.toList shouldBe Stream(9,9,9).toList
+  }
+
+  "from" should "generate infinite stream starting at n" in {
+    val result = Stream.from(3).take(3)
+    result.toList shouldBe Stream(3,4,5).toList
+  }
+
+  "fibs" should "generate stream of fibonacci numbers" in {
+    val result = Stream.fibs().take(7)
+    result.toList shouldBe Stream(0,1,1,2,3,5,8).toList
+  }
+
 
 }
