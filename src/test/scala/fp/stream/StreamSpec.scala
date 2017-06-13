@@ -108,5 +108,66 @@ class StreamSpec extends FlatSpec with Matchers {
     result.toList shouldBe List((Some(1), Some(1)), (Some(2), Some(2)), (Some(3), Some(3)), (Some(4), None), (Some(5), None))
   }
 
+  "hasSubsequence" should "check for subsequence" in {
+    val s1 = Stream(1, 2, 3, 4, 5)
+    val s2 = Stream(1, 2, 3)
+    val result = s1.hasSubsequence(s2)
+    result shouldBe true
+  }
+
+  "tails" should "have all subsequences" in {
+    val s = Stream(1, 2, 3)
+    val result = s.tails.toList.map(l => l.toList)
+    result shouldBe List(List(), List(3), List(2,3), List(1,2,3))
+  }
+
+  "startWith" should "check first elements" in {
+    val s1 = Stream(1,2,3)
+    val s2 = Stream(1)
+    s1.startWith(s2) shouldBe true
+  }
+    "startWith" should "be false for empty" in {
+      val s1 = Stream()
+      val s2 = Stream(1)
+      s1.startWith(s2) shouldBe false
+    }
+
+  "forAll" should "look at all elements" in {
+    val s = Stream(true)
+    val result = s.forAll(c => c)
+    result shouldBe true
+  }
+
+  "startWith" should "check first 2 elements" in {
+    val s1 = Stream(1,2,3)
+    val s2 = Stream(1, 2)
+    s1.startWith(s2) shouldBe true
+  }
+
+  "startWith" should "check first all elements" in {
+    val s1 = Stream(1,2,3)
+    s1.startWith(s1) shouldBe true
+  }
+
+  "startWith" should "check mismatch elements" in {
+    val s1 = Stream(1,2,3)
+    val s2 = Stream(4,5)
+    s1.startWith(s2) shouldBe false
+  }
+
+  "hasSubsequence" should "check for subsequence 2" in {
+    val s1 = Stream(1, 2, 3, 4, 5)
+    val s2 = Stream(2, 3)
+    val result = s1.hasSubsequence(s2)
+    result shouldBe true
+  }
+
+  "hasSubsequence" should "check for subsequence false" in {
+    val s1 = Stream(1, 2, 3, 4, 5)
+    val s2 = Stream(1, 3)
+    val result = s1.hasSubsequence(s2)
+    result shouldBe false
+  }
+
 
 }

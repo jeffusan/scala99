@@ -84,7 +84,7 @@ sealed trait Stream[+A] {
     * Your implementation should terminate the traversal as soon as it encounters a nonmatching value
     */
   def forAll(p: A => Boolean): Boolean = {
-    foldRight(false)((a,b) => p(a) && b)
+    foldRight(true)((a,b) => p(a) && b)
   }
 
   def takeWhileViaFold(p: A => Boolean): Stream[A] = {
@@ -133,6 +133,28 @@ sealed trait Stream[+A] {
     case (Cons(h, t), Empty) => Some((Some(h()), None), (t(), Empty))
     case (Empty, Cons(h, t)) => Some((None, Some(h())), (Empty, t()))
     case _ => None
+  }
+
+  /**
+    * http://lambda-the-ultimate.org/node/1277#comment-14313
+    */
+  def hasSubsequence[B](s: Stream[B]): Boolean = {
+    //checks whether any tail of the stream has s as prefix
+    tails.exists(sub => sub.startWith(s))
+  }
+
+  def tails: Stream[Stream[A]] = {
+    def go[B >: A](acc: Stream[Stream[B]], s: Stream[B]): Stream[Stream[B]] = {
+      s match {
+        case Cons(_, t) => go(cons(t(), acc), t())
+        case _ => acc
+      }
+    }
+    go(cons(this, empty), this)
+  }
+
+  def startWith[B](s: Stream[B]): Boolean = {
+    zipAll(s).takeWhile(_._2.isDefined).forAll{ case (a,b) => a == b }
   }
 
 }
