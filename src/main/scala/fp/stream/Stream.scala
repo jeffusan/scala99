@@ -38,7 +38,7 @@ sealed trait Stream[+A] {
   def takeViaUnfold(n: Int): Stream[A] = unfold((this, n)){
     case (s, i) => s.headOption().flatMap(
       h => if(i > 0) Some(h, (s.drop(1), i -1))
-           else None)
+      else None)
     case _ => None
   }
 
@@ -153,15 +153,98 @@ sealed trait Stream[+A] {
     go(cons(this, empty), this)
   }
 
+  def tailsViaUnfold: Stream[Stream[A]] = {
+    Stream(this).append(unfold(this) {
+      case Empty => None
+      case Cons(h, t) => Some(t(), t())
+    })
+  }
+
+  def tailsViaUnfoldAndDrop: Stream[Stream[A]] = {
+    unfold(this) {
+      case Empty => None
+      case s => Some(s, s.drop(1))
+    }.append(Stream(empty))
+  }
+
+  def tailsViaScanRight: Stream[Stream[A]] = {
+    scanRight(empty[A])((a,b) => cons(a, b))
+  }
+
   def startWith[B](s: Stream[B]): Boolean = {
     zipAll(s).takeWhile(_._2.isDefined).forAll{ case (a,b) => a == b }
   }
 
+  def scanLeft[B](z: B)(f: (A,B) => B): Stream[B] = {
+    def go(acc: Stream[B], s: Stream[A]): Stream[B] = {
+      s match {
+        case Empty => acc
+        case Cons(h, t) => go(cons(f(h(), acc.headOption().getOrElse(z)), acc), t())
+      }
+    }
+    go(Stream(z), this)
+  }
+
+  //  def foldRight[B](z: => B)(f: (A, => B) => B): B = this match {
+  //    case Cons(h,t) => f(h(), t().foldRight(z)(f))
+  //    case _ => z
+  //  }
+  def scanRight[B](z: B)(f: (A, => B) => B): Stream[B] = {
+    foldRight(Stream(z)) {
+      (a, b) =>
+        val next = b
+        val y = f(a, next.headOption().getOrElse(z))
+        cons(y, next)
+    }
+  }
+
+  def scanRight2[B](z: B)(f: (A, => B) => B): Stream[B] = this match {
+    case Cons(h, t) =>
+      lazy val next = t().scanRight2(z)(f)
+      lazy val y = f(h(), next.headOption().getOrElse(z))
+      cons(y, next)
+    case _ => Stream(z)
+  }
+
+  /*
+  The function can't be implemented using `unfold`,
+  since `unfold` generates elements of the `Stream` from left to right.
+  It can be implemented using `foldRight` though.
+  The implementation is just a `foldRight` that keeps the accumulated value and the stream of intermediate results,
+  which we `cons` onto during each iteration.
+  When writing folds, it's common to have more state in the fold than is needed to compute the result.
+  Here, we simply extract the accumulated list once finished.
+  */
+  def scanRight3[B](z: B)(f: (A, => B) => B): Stream[B] =
+    foldRight((z, Stream(z)))((a, p0) => {
+      // p0 is passed by-name and used in by-name args in f and cons. So use lazy val to ensure only one evaluation...
+      lazy val p1 = p0
+//            println("c")
+      val b2 = f(a, p1._1)
+      (b2, cons(b2, p1._2))
+    })._2
+
+  def scanRight4[B](z: B)(f: (A, => B) => B): Stream[B] =
+    foldRight((z, Stream(z)))((a, p0) => {
+      // p0 is passed by-name and used in by-name args in f and cons. So use lazy val to ensure only one evaluation...
+      val p1 = p0
+      val b2 = f(a, p1._1)
+      (b2, cons(b2, p1._2))
+    })._2
+
 }
+
+
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
 
 object Stream {
+
+  def maybeTwice(b: Boolean, i: => Int): Int = if (b) i+i else 0
+  def maybeTwice2(b: Boolean, i: => Int): Int = {
+    lazy val j = i
+    if (b) j+j else 0
+  }
 
   def cons[A](hd: => A, tl: => Stream[A]): Stream[A] = {
     lazy val head = hd

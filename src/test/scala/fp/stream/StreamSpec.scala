@@ -121,6 +121,24 @@ class StreamSpec extends FlatSpec with Matchers {
     result shouldBe List(List(), List(3), List(2,3), List(1,2,3))
   }
 
+  "tails via unfold" should "have all subsequences" in {
+    val s = Stream(1, 2, 3)
+    val result = s.tailsViaUnfold.toList.map(l => l.toList)
+    result shouldBe List(List(1,2,3), List(2,3), List(3), List())
+  }
+
+  "tails via unfold and drop" should "have all subsequences" in {
+    val s = Stream(1, 2, 3)
+    val result = s.tailsViaUnfoldAndDrop.toList.map(l => l.toList)
+    result shouldBe List(List(1,2,3), List(2,3), List(3), List())
+  }
+
+  "tails via scanRigth" should "have all subsequences" in {
+    val s = Stream(1, 2, 3)
+    val result = s.tailsViaScanRight.toList.map(l => l.toList)
+    result shouldBe List(List(1,2,3), List(2,3), List(3), List())
+  }
+
   "startWith" should "check first elements" in {
     val s1 = Stream(1,2,3)
     val s2 = Stream(1)
@@ -167,6 +185,40 @@ class StreamSpec extends FlatSpec with Matchers {
     val s2 = Stream(1, 3)
     val result = s1.hasSubsequence(s2)
     result shouldBe false
+  }
+
+  "scanRight" should "produce a stream of intermediate results" in {
+    val result = Stream(1,2,3).scanRight(0)((a, b) => {println(1);a + b}).toList
+    result shouldBe List(6,5,3,0)
+  }
+
+  "scanRight2" should "produce a stream of intermediate results" in {
+    val result = Stream(1,2,3).scanRight2(0)((a, b) => {a + b}).toList
+    result shouldBe List(6,5,3,0)
+  }
+
+  "scanRight3" should "produce a stream of intermediate results" in {
+    val result = Stream(1,2,3).scanRight3(0)((a, b) => {a + b}).toList
+    result shouldBe List(6,5,3,0)
+  }
+
+  "scanRight4" should "produce a stream of intermediate results" in {
+    val result = Stream(1,2,3).scanRight4(0)((a, b) => {println(4);a + b}).toList
+    result shouldBe List(6,5,3,0)
+  }
+
+  "maybeTwice" should "evaluate twice" in {
+    var a = 0
+    val result = Stream.maybeTwice(true, {a = a +1; 2})
+    result shouldBe 4
+    a shouldBe 2
+  }
+
+  "maybeTwice2" should "evaluate once" in {
+    var a = 0
+    val result = Stream.maybeTwice2(true, {a = a +1; 2})
+    result shouldBe 4
+    a shouldBe 1
   }
 
 
