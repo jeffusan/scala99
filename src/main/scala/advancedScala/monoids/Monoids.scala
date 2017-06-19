@@ -1,14 +1,18 @@
 package advancedScala.monoids
 
+import cats.syntax.semigroup._
+import cats.instances.int._
+
+
 trait Semigroup[A] {
   def combine(x: A, y: A): A
 }
 
 trait Monoid[A] extends Semigroup[A] {
-  val empty: A
+  def empty: A
 }
 
-object Monoid {
+object Monoids {
   def apply[A](implicit monoid: Monoid[A]) = monoid
 
   def associativeLaw[A](x: A, y: A, z: A)
@@ -37,5 +41,16 @@ object Monoid {
   def orMonoid = new Monoid[Boolean] {
     override val empty: Boolean = false
     override def combine(x: Boolean, y: Boolean): Boolean = orSemigroup.combine(x, y)
+  }
+
+  implicit def setUnionMonoid[A](): Monoid[Set[A]] =
+    new Monoid[Set[A]] {
+      def combine(a: Set[A], b: Set[A]) = a union b
+      def empty = Set.empty[A]
+    }
+
+  implicit val intMonoid: Monoid[Int] = new Monoid[Int] {
+    def combine(a: Int, b: Int) = a + b
+    def empty = 0
   }
 }
