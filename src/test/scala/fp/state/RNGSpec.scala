@@ -17,4 +17,14 @@ class RNGSpec extends FlatSpec with Matchers {
     assert(d <= 1)
   }
 
+  "ints" should "generate a list" in {
+    val (list, r) = RNG.ints(4)(base)
+    list.size shouldBe 4
+  }
+
+  "intsViaSequence" should "generate a list" in {
+    val (list, r) = RNG.intsViaSequence(4)(base)
+    list.size shouldBe 4
+  }
+
 }
