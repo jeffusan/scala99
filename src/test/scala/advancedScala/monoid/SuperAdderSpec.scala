@@ -1,6 +1,7 @@
 package advancedScala.monoid
 
-import cats.kernel.Monoid
+import cats.instances.int._
+
 import org.scalatest.{FlatSpec, Matchers}
 
 class SuperAdderSpec extends FlatSpec with Matchers {
