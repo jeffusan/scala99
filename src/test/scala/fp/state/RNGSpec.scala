@@ -27,4 +27,10 @@ class RNGSpec extends FlatSpec with Matchers {
     list.size shouldBe 4
   }
 
+  "operating the candy machine" should "work" in {
+    val m = Machine(Machine.Locked, 5, 10)
+    val result = Machine.simulateMachine(List(Coin, Turn, Coin, Turn, Coin, Turn, Coin, Turn)).run(m)
+    result._1 shouldBe (14, 1)
+  }
+
 }
