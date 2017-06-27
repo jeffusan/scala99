@@ -3,12 +3,25 @@ package advancedScala.classesAndInterfaces
 trait Printable[A] {
 
   def format(a: A): String
+
+  def contramap[B](func: B => A): Printable[B] = {
+    val self = this
+    new Printable[B] {
+      def format(b: B): String = self.format(func(b))
+    }
+  }
 }
 
 object PrintableInstances {
 
   implicit val stringPrintable = new Printable[String] {
-    override def format(a: String): String = a
+    def format(a: String): String = "\"" + a + "\""
+  }
+
+  implicit val booleanPrintable = new Printable[Boolean] {
+    def format(value: Boolean): String = {
+      if(value) "yes" else "no"
+    }
   }
 
   implicit val intPrintable = new Printable[Int] {
@@ -20,6 +33,9 @@ object PrintableInstances {
       s"${a.name} is a ${a.age} years old ${a.color} cat."
     }
   }
+
+  implicit def boxPrintable[A](implicit p: Printable[A]): Printable[Box[A]] =
+    p.contramap[Box[A]](_.value)
 }
 
 object Printable {
@@ -46,6 +62,7 @@ object PrintableSyntax {
 
   }
 }
+final case class Box[A](value: A)
 
 object Runner {
   def main(args: Array[String]) {
