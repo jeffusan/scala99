@@ -7,59 +7,71 @@ object LongestSequence {
 
   def main(args: Array[String]): Unit = {
     val in = read
-    println(longestSequence(in).size)
+    println(longestSequence(in))
   }
 
-  def read: Stream[Int]= {
+  def read: Array[Int]= {
+
+    val size = StdIn.readLine().toInt
+
+    val input = Array.ofDim[Int](size)
 
     @tailrec
-    def reread(xs: Stream[Int]): Stream[Int] = {
+    def reread(i: Int): Array[Int] = {
       val s = Option(StdIn.readLine())
-      println(s)
-      if (s.isEmpty) xs else reread(s.get.toInt +: xs)
+      if (s.isEmpty) input else {
+        input(i) = s.get.toInt
+        reread(i + 1)
+      }
     }
 
-    reread(Stream[Int]())
+    reread(0)
   }
 
-  def longestSequence(seq: Stream[Int]): Seq[Int] = {
+  def longestSequence(seq: Array[Int]): Array[Int] = {
 
-    def next(m: Array[Int], start: Int, v: Int): Int = {
-      var i = start
-      while(i > 0 && seq(m(i)) > v) {
-        i = i - 1
-      }
-      i
-    }
+    if(seq.length == 1) seq else {
 
-    val analysis = seq.zipWithIndex.foldLeft((Array[Int](-1), Array.fill(seq.size + 1)(0), 1)) {
-      (a, e) =>
-        val p = a._1
-        val m = a._2
-        val max = a._3
-
-        val v: Int = e._1
-        val i = e._2
-
-        if (i == 0) {
-          a
-        } else {
-          val n = next(m, max, v)
-          m(n + 1) = i
-          val newMax = if(n >= max) n + 1 else max
-          val newP = if (n > 0) p :+ m(n) else p :+ -1
-          (newP, m, newMax)
+      def next(m: Array[Int], start: Int, v: Int): Int = {
+        var i = start
+        while(i > 0 && seq(m(i)) >= v) {
+          i = i - 1
         }
-    }
+        i
+      }
 
-    val last = analysis._2(analysis._3)
-    var r = Seq(seq(last))
-    var p = analysis._1(last)
-    while(p != -1) {
-      r = r :+ seq(p)
-      p = analysis._1(p)
+      val analysis = seq.zipWithIndex.foldLeft((Array.fill(seq.length)(-1), Array.fill(seq.length + 1)(0), 1)) {
+        (a, e) =>
+          val p = a._1
+          val m = a._2
+          val max = a._3
+
+          val v: Int = e._1
+          val i = e._2
+
+          if (i == 0) {
+            a
+          } else {
+            val n = next(m, max, v)
+            m(n + 1) = i
+            val newMax = if(n >= max) n + 1 else max
+            if (n > 0) p(i) = m(n) else p(i) = -1
+            (p, m, newMax)
+          }
+      }
+
+      val last = analysis._2(analysis._3)
+          var r = Array(seq(last))
+//      var r = 1
+      var p = analysis._1(last)
+      while(p != -1) {
+              r = r :+ seq(p)
+//        r = r + 1
+        p = analysis._1(p)
+      }
+//      r
+          r.reverse
     }
-    r.reverse
   }
 
 }
