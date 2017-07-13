@@ -4,7 +4,7 @@ package disjointset
 
 object GraphComponents {
 
-  case class State(sizes: Map[Size, Map[Id, Boolean]], min: Int, max: Int, map: Map[Int, Node])
+  case class State(sizes: Map[Size, Set[Id]], min: Int, max: Int, map: Map[Int, Node])
 
   case class Node(id: Int, parent: Int, size: Int)
 
@@ -26,7 +26,7 @@ object GraphComponents {
         val m1 = m0.updated(y, Node(y, x, 1))
         val s = Size(2)
         val i = Id(x)
-        val newSizes = state.sizes.updated(s, state.sizes.getOrElse(s, Map(i -> true)).updated(i, true))
+        val newSizes = state.sizes.updated(s, state.sizes.getOrElse(s, Set(i)) + i)
         (newSizes, m1)
       case (px, NoParent) =>
         addNodeAndUpdateRoot(nx, ny, state.map, state.sizes)
@@ -54,7 +54,7 @@ object GraphComponents {
                     root: Node,
                     nValue: Int,
                     nParent: Node,
-                    sizes: Map[Size, Map[Id, Boolean]]): (Map[Size, Map[Id, Boolean]], Map[Int, Node]) = {
+                    sizes: Map[Size, Set[Id]]): (Map[Size, Set[Id]], Map[Int, Node]) = {
     val m0 = map.updated(rootValue, Node(rootValue, root.id, root.size + 1))
     val m1 = m0.updated(nValue, Node(nValue, root.id, 1))
 
@@ -76,7 +76,7 @@ object GraphComponents {
   private def addNodeAndUpdateRoot(existingN: Node,
                                    newN: Node,
                                    map: Map[Int, Node],
-                                   sizes: Map[Size, Map[Id, Boolean]]): (Map[Size, Map[Id, Boolean]], Map[Int, Node]) = {
+                                   sizes: Map[Size, Set[Id]]): (Map[Size, Set[Id]], Map[Int, Node]) = {
     val p = getParent(map.getOrElse(existingN.parent, existingN), map)
     val m0 = map.updated(newN.id, Node(newN.id, p.id, 1))
     val m1 = m0.updated(p.id, Node(p.id, p.id, p.size +1))
@@ -89,12 +89,12 @@ object GraphComponents {
     (sizes2, m1)
   }
 
-  private def updateSizes(sizes: Map[Size, Map[Id, Boolean]], size: Size, id: Id): Map[Size, Map[Id, Boolean]] = {
-    sizes.updated(size, sizes.getOrElse(size, Map(id -> true)).updated(id, true))
+  private def updateSizes(sizes: Map[Size, Set[Id]], size: Size, id: Id): Map[Size, Set[Id]] = {
+    sizes.updated(size, sizes.getOrElse(size, Set(id)) + id)
   }
 
-  private def removeSize(sizes: Map[Size, Map[Id, Boolean]], size: Size, id: Id): Map[Size, Map[Id, Boolean]] = {
-    val sizes1 = sizes.updated(size, sizes.getOrElse(size, Map(id -> true)) - id)
+  private def removeSize(sizes: Map[Size, Set[Id]], size: Size, id: Id): Map[Size, Set[Id]] = {
+    val sizes1 = sizes.updated(size, sizes.getOrElse(size, Set(id)) - id)
     if(sizes1.getOrElse(size, Map()).isEmpty) sizes1 - size else sizes1
   }
 
