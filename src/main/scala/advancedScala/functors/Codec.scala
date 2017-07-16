@@ -1,5 +1,9 @@
 package advancedScala.functors
 
+import advancedScala.classesAndInterfaces.Box
+
+import scala.util.Try
+
 
 trait Codec[A] {
 
@@ -29,5 +33,14 @@ object Codec {
 
   def decode[A](value: String)(implicit c: Codec[A]): Option[A] =
     c.decode(value)
+
+  implicit val intCodec = new Codec[Int] {
+    def encode(value: Int): String = value.toString
+    def decode(value: String): Option[Int] = Try(value.toInt).toOption
+  }
+
+  implicit def boxCodec[A](implicit c: Codec[A]): Codec[Box[A]] = {
+    c.imap[Box[A]](Box(_), _.value)
+  }
 
 }
