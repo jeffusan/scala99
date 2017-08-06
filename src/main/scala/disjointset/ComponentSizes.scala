@@ -8,35 +8,53 @@ object ComponentSizes {
 
   def build(n: Int, in: List[(Int, Int)]): (Int, Int) = {
 
-    val vector = Vector.fill(2 * n + 1)(0)
+    val v = Vector.fill(2 * n + 1)(0)
+    val (parent, _) = v.foldLeft((v, 0)) {(vi, e) => (vi._1.updated(vi._2,vi._2), vi._2 + 1)}
 
-    val components = in.foldLeft(vector) {
-      (v, e) => {
-        val l = v(e._1)
-        val r = v(e._2)
+    val rank = Vector.fill(2 * n + 1)(0)
 
-        (l,r) match {
-          case (0,0) => v.updated(e._1, e._1).updated(e._2, e._1)
-          case (i, 0) => v.updated(e._2, i)
-          case (0, i) => v.updated(e._1, i)
-          case (a, b) => v.zipWithIndex.foldLeft(v) {
-            (vec, z) =>
-              val i = z._2
-              val e = z._1
-              if(e == b) vec.updated(i, a) else vec
-          }
-        }
+
+    /**
+      * with heuristic: path compression
+      */
+    def find(i: Int, p: Vector[Int]): (Int, Vector[Int]) = {
+      val u = if(p(i) != i) {
+        val (v, pu) = find(p(i), p)
+        pu.updated(i, v)
+      }
+      else p
+      (u(i), u)
+    }
+
+    val (p, r) = in.foldLeft(parent, rank) {
+      (pr, e) => {
+        val p = pr._1
+        val r = pr._2
+
+        val (px, p1) = find(e._1, p)
+        val (py, p2) = find(e._2, p1)
+
+        val p3 = if(r(px) > r(py)) p2.updated(py, px) else p2.updated(px, py)
+        /**
+          * heuristic “union by rank” to make the set with less elements to point on the one with more elements,
+          * so that there is less elements to "update".
+          */
+        val r1 = if(r(px) == r(py)) r.updated(px, r(px) +1) else r
+        (p3, r1)
       }
     }
 
-    val counts = components.foldLeft(Map[Int, Int]()) {
-      (m, e) =>
-        if(e == 0) m
-        else {
-          m.updated(e, m.getOrElse(e, 0) + 1)
-        }
+    val (_, map) = (0 to 2 * n).foldLeft(p, Map[Int, Int]()) {
+      (p0map, e) =>
+        val p0 = p0map._1
+        val map = p0map._2
+        val (i, p1) = find(e, p0)
+        val m1 = map.updated(i, map.getOrElse(i, 0) + 1)
+        (p1, m1)
     }
-    (counts.values.min,counts.values.max)
+
+    val values = map.values.toSet.filter(_ != 1) //remove single elements
+    (values.min, values.max)
   }
 
 
