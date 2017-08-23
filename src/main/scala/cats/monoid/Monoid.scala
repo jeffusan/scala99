@@ -32,16 +32,16 @@ object Monoid {
     override def combine(x: Boolean, y: Boolean): Boolean = x || y
   }
 
-  val addSetMonoid = new Monoid[Set] {
-    override def empty: Set = Set()
+  def addSetMonoid[A]() = new Monoid[Set[A]] {
+    override def empty: Set[A] = Set[A]()
 
-    override def combine(x: Set, y: Set): Set = x ++ y
+    override def combine(x: Set[A], y: Set[A]): Set[A] = x ++ y
   }
 
-  val removeSetMonoid = new Monoid[Set] {
-    override def empty: Set = Set()
+  def removeSetMonoid[A]() = new Monoid[Set[A]] {
+    override def empty: Set[A] = Set[A]()
 
-    override def combine(x: Set, y: Set): Set = x -- y
+    override def combine(x: Set[A], y: Set[A]): Set[A] = x -- y
   }
 
 }
