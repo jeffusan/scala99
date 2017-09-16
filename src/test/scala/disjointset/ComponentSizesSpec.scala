@@ -29,23 +29,8 @@ class ComponentSizesSpec extends FlatSpec with Matchers {
     (r._2, r._1) shouldBe (4, 3)
   }
 
-  "min of size 3 case including outside of range: x < 1" should "ignore single and be correct" in {
-    val r = ComponentSizes.build(5, List((1, 6), (2, 7), (3,8), (2,6), (3, 10), (-1, 7)))
-    (r._2, r._1) shouldBe (4, 3)
-  }
-
   "min of size 3 case including outside of range: x > N" should "ignore single and be correct" in {
     val r = ComponentSizes.build(5, List((1, 6), (2, 7), (3,8), (2,6), (3, 10), (6, 7)))
-    (r._2, r._1) shouldBe (4, 3)
-  }
-
-  "min of size 3 case including outside of range: y < N + 1" should "ignore single and be correct" in {
-    val r = ComponentSizes.build(5, List((1, 6), (2, 7), (3,8), (2,6), (3, 10), (3, 4)))
-    (r._2, r._1) shouldBe (4, 3)
-  }
-
-  "min of size 3 case including outside of range: y > 2*N" should "ignore single and be correct" in {
-    val r = ComponentSizes.build(5, List((1, 6), (2, 7), (3,8), (2,6), (3, 10), (3, 24)))
     (r._2, r._1) shouldBe (4, 3)
   }
 
