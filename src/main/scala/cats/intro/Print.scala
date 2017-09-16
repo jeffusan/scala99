@@ -1,6 +1,7 @@
 package cats.intro
 
 import cats.Show
+import cats.kernel.Eq
 
 trait Printable[A] {
   def format(a: A): String
@@ -45,6 +46,20 @@ object PrintableSyntax {
 
 
 object Print {
+
+
+  import cats.syntax.all._
+  import cats.instances.int._
+  import cats.instances.string._
+  import cats.instances.option._
+
+  implicit val catEqual = Eq.instance[Cat] { (a ,b) =>
+    a.age === b.age && a.name === b.name && a.color === b.color
+  }
+
+
+
+
   def main(args: Array[String]) {
 
     import PrintableInstances._
@@ -58,6 +73,16 @@ object Print {
     import cats.syntax.show._
 
     println(c.show)
+
+    val cat1 = Cat("Garfield",   35, "orange and black")
+    val cat2 = Cat("Heathcliff", 30, "orange and black")
+    val optionCat1 = Option(cat1)
+    val optionCat2 = Option.empty[Cat]
+
+    println(cat1 === cat2)
+    println(cat1 =!= cat2)
+    println(optionCat1 === optionCat2)
+    println(optionCat1 =!= optionCat2)
 
 
   }
