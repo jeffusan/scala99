@@ -7,9 +7,6 @@ object StateMonad {
 
   val getDemo = State.get[String]
 
-
-
-
   type CalcState[A] = State[List[Int], A]
 
   def evalOne(sym: String): CalcState[Int] = {
