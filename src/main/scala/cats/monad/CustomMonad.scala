@@ -50,6 +50,8 @@ object CustomMonad {
     import cats.syntax.functor._
     import cats.syntax.flatMap._
 
+//    import CustomMonad._
+
     val t = for {
       a <- branch(leaf(100), leaf(200))
       b <- branch(leaf(a - 10), leaf(a + 10))
@@ -57,6 +59,15 @@ object CustomMonad {
     } yield c
 
     println(t)
+  }
+
+  import scala.language.higherKinds
+  trait MyMonad[F[_]] {
+    def pure[A](a: A): F[A]
+    def flatMap[A, B](value: F[A])(func: A => F[B]): F[B]
+    def map[A,B](value: F[A])(f: A => B): F[B] = {
+      flatMap(value)(a ⇒ pure(f(a)))
+    }
   }
 
 }
