@@ -2,6 +2,9 @@ package sort
 
 object HeapSort {
 
+  /**
+    * O(nlog(n))
+    */
   def sort(a: Array[Int]): Array[Int] = {
     val h = buildMaxHeap(a)
     val o = (a.length - 1 to 1 by -1).foldLeft(h) {
@@ -55,10 +58,21 @@ object HeapSort {
 
     def apply(i: Int): Int = a(i)
     def swap(i: Int, j: Int): Heap = {
-      val  t = a(i)
+      val t = a(i)
       a.update(i, a(j))
       a.update(j, t)
       new Heap(a, heapSize)
+    }
+
+    def pop(): (Int, Heap) = {
+      val max = a(0)
+      val u = a.updated(0, a(heapSize - 1))
+      val h = new Heap(u, heapSize - 1)
+      (max, maxHeapify(h, 0))
+    }
+
+    def push(x: Int): Heap = {
+
     }
   }
 
