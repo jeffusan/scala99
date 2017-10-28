@@ -34,10 +34,10 @@ class UptimeService[F[_]: Applicative](client: UptimeClient[F]) {
     hostnames.traverse(client.getUptime).map(_.sum)
 }
 
-class TestUptimeClient(hosts: Map[String, Int]) extends UptimeClient[Id[Int]] {
+class TestUptimeClient(hosts: Map[String, Int]) extends UptimeClient[Id] {
   def getUptime(hostname: String): Id[Int] = hosts.getOrElse(hostname, 0)
 }
 
-class RealUptimeClient(hosts: Map[String, Int]) extends UptimeClient[Future[Int]] {
+class RealUptimeClient(hosts: Map[String, Int]) extends UptimeClient[Future] {
   def getUptime(hostname: String): Future[Int] = Future.successful(hosts.getOrElse(hostname, 0))
 }
