@@ -13,10 +13,10 @@ object P12 {
 
         case elt: Char => elt.toChar :: result
 
-        case tuple: (Int, Char) => {
+        case (k: Int, c: Char) => {
           var tmp = result
-          for(i <- 0 until tuple._1){
-            tmp = tuple._2 :: tmp
+          for(i <- 0 until k){
+            tmp = c :: tmp
           }
           tmp
         }

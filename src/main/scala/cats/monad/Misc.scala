@@ -1,5 +1,8 @@
 package cats.monad
 
+import cats.Monad
+import cats.data.{Writer, WriterT}
+
 object Misc {
 
   def numbersBetween(min: Int, max: Int): List[Int] =
@@ -23,12 +26,12 @@ object Misc {
       y <- numbersBetween(4, 5)
     } yield (x,y)
 
-    println(a)
+//    println(a)
+//
+//
+//    println(numbersBetween(1, 3).flatMap(x => numbersBetween(4,5).map(y => (x, y))))
 
 
-    println(numbersBetween(1, 3).flatMap(x => numbersBetween(4,5).map(y => (x, y))))
-
-    import cats.Monad
     import cats.instances.option._
     import cats.instances.list._
     import scala.language.higherKinds
@@ -64,9 +67,9 @@ object Misc {
           Left("Negative. Stopping!")
         } }
 
-    println(countPositive(List(1, 2, 3)))
+//    println(countPositive(List(1, 2, 3)))
     // res7: Either[String,Int] = Right(3)
-    println(countPositive(List(1, -2, 3)))
+//    println(countPositive(List(1, -2, 3)))
     // res8: Either[String,Int] = Left(Negative. Stopping!)
 
     "Error".asLeft[Int].getOrElse(0)
@@ -74,7 +77,7 @@ object Misc {
     "Error".asLeft[Int].orElse(2.asRight[String])
     // res10: Either[String,Int] = Right(2)
 
-    println((-1).asRight[String].ensure("Must be non-negative!")(_ > 0))
+//    println((-1).asRight[String].ensure("Must be non-negative!")(_ > 0))
     // res11: Either[String,Int] = Left(Must be non-negative!)
 
     val d = for {
@@ -83,12 +86,45 @@ object Misc {
       c <- if(b == 0) "DIV0".asLeft[Int] else (a / b).asRight[String
         ]
     } yield c * 100
-    println(d)
+//    println(d)
+
+    factorial(5)
 
   }
 
+  import cats.Eval
+
+//  def foldRight[A, B](as: List[A], acc: B)(fn: (A, B) => Eval[B]): Eval[B] =
+//    as match {
+//      case head :: tail =>
+//        Eval.defer(fn(head, foldRight(tail, acc)(fn)))
+//      case Nil =>
+//        Eval.now(acc)
+//    }
+
+
+  import cats.syntax.writer._
+
+  val a = Writer(Vector("msg1", "msg2", "msg3"), 123)
+  // a: cats.data.WriterT[cats.Id,scala.collection.immutable Vector[String],Int] = WriterT((Vector(msg1, msg2, msg3),123))
+  val b = 123.writer(Vector("msg1", "msg2", "msg3"))
+
+
+  def slowly[A](body: => A): A =
+    try body finally Thread.sleep(100)
+
+  def factorial(n: Int): Int = {
+    val ans = slowly(if(n == 0) 1 else n * factorial(n - 1))
+    println(s"fact $n $ans")
+    ans
+  }
 
 }
+
+
+
+import cats.Eval
+import cats.data.{Writer, WriterT}
 
 import scala.language.higherKinds
 
