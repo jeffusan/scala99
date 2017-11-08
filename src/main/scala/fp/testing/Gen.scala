@@ -22,6 +22,8 @@ case class Gen[A](sample: State[RNG,A])
 
 object Gen {
 
+  implicit def ops[A](a: Gen[A]): GenOps[A] = new GenOps(a)
+
   def listOf[A](a: Gen[A]): Gen[List[A]] = ???
 
   def forAll[A](a: Gen[A])(f: A => Boolean): Prop = ???
@@ -36,6 +38,14 @@ object Gen {
       sb <- b.sample
     } yield f(sa, sb)
     Gen(sc)
+  }
+
+  def map[A, B](a: Gen[A])(f: A => B): Gen[B] = {
+    Gen(a.sample.map(f(_)))
+  }
+
+  def flatMap[A, B](a: Gen[A])(f: A => Gen[B]): Gen[B] = {
+    Gen(a.sample.flatMap(a => f(a).sample))
   }
 
   def choosePair(start: Int, stopExclusive: Int): Gen[(Int, Int)] = {
@@ -60,6 +70,24 @@ object Gen {
     }
     Gen(State.unit(result))
   }
+
+  def toOption[A](a: Gen[A]): Gen[Option[A]] = {
+    Gen(a.sample.map(Option(_)))
+  }
+
+  def string: String = {
+    val genChar: Gen[Char] = choose('a'.toInt, 'z'.toInt).map(_.toChar)
+
+    val stringGen = choose(1, 100).flatMap(i => listOfN(i, genChar).map(_.mkString))
+
+    val (s, r) = stringGen.sample.run(SimpleRNG(1324))
+    s
+  }
+}
+
+class GenOps[A](a: Gen[A]) {
+  def map[B](f: A => B): Gen[B] = Gen.map(a)(f)
+  def flatMap[B](f: A => Gen[B]): Gen[B] = Gen.flatMap(a)(f)
 }
 
 
