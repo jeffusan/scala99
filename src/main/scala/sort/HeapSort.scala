@@ -71,9 +71,9 @@ object HeapSort {
       (max, maxHeapify(h, 0))
     }
 
-    def push(x: Int): Heap = {
-
-    }
+//    def push(x: Int): Heap = {
+//
+//    }
   }
 
   /**
