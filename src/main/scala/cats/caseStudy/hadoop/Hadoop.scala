@@ -2,6 +2,7 @@ package cats.caseStudy.hadoop
 
 import cats.Monoid
 import cats.syntax.monoid._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 

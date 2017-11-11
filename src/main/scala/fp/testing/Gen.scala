@@ -6,7 +6,8 @@ import fp.testing.Prop._
 
 trait Prop { self =>
   def &&(p: Prop): Prop = new Prop {
-    def check: Boolean = self.check && p.check
+    def check: Either[(FailedCase, SuccessCount), SuccessCount] = ???
+//    def check: Boolean = self.check && p.check
   }
   def check: Either[(FailedCase, SuccessCount), SuccessCount]
 
@@ -59,29 +60,45 @@ object Gen {
   def boolean: Gen[Boolean] = Gen(State(RNG.nonNegativeInt).map(n => if(n % 2 == 0) true else false))
 
   def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] = {
-    val rng = SimpleRNG(1324)
 
-    val (endRng, result) = (0 until n).foldLeft[(RNG, List[A])]((rng, List[A]())){
-      (rngAndList, _) =>
-        val r = rngAndList._1
-        val list = rngAndList._2
-        val (a, newRng) = g.sample.run(r)
-        (newRng, a :: list )
+    val (_, result) = (0 until n).foldLeft[(Gen[A], Gen[List[A]])]((g, unit(List[A]()))){
+      (gAndList, _) =>
+        val ga = gAndList._1
+        val gl = gAndList._2
+
+        val l = for {
+          a <- ga
+          list <- gl
+        } yield a :: list
+
+        (ga, l)
     }
-    Gen(State.unit(result))
+    result
   }
+
+//  def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] =
+//    Gen(State.sequence(List.fill(n)(g.sample)))
+
+//  def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] = {
+//    val rng = SimpleRNG(1324)
+//
+//    val (endRng, result) = (0 until n).foldLeft[(RNG, List[A])]((rng, List[A]())){
+//      (rngAndList, _) =>
+//        val r = rngAndList._1
+//        val list = rngAndList._2
+//        val (a, newRng) = g.sample.run(r)
+//        (newRng, a :: list )
+//    }
+//    Gen(State.unit(result))
+//  }
 
   def toOption[A](a: Gen[A]): Gen[Option[A]] = {
     Gen(a.sample.map(Option(_)))
   }
 
-  def string: String = {
+  def string(n: Int): Gen[String] = {
     val genChar: Gen[Char] = choose('a'.toInt, 'z'.toInt).map(_.toChar)
-
-    val stringGen = choose(1, 100).flatMap(i => listOfN(i, genChar).map(_.mkString))
-
-    val (s, r) = stringGen.sample.run(SimpleRNG(1324))
-    s
+    choose(1, n).flatMap(i => listOfN(i, genChar).map(_.mkString))
   }
 }
 
