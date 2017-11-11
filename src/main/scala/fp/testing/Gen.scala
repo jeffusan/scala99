@@ -6,7 +6,7 @@ import fp.testing.Prop._
 
 trait Prop { self =>
   def &&(p: Prop): Prop = new Prop {
-    def check: Boolean = self.check && p.check
+    def check: Either[(FailedCase, SuccessCount), SuccessCount] = ???
   }
   def check: Either[(FailedCase, SuccessCount), SuccessCount]
 
