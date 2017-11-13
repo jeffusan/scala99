@@ -1,5 +1,7 @@
 package leet
 
+import datastructure.Heap
+
 
 /**
   * Given an array nums, there is a sliding window of size k
@@ -55,6 +57,10 @@ object SlidingWindowMax {
       val nextHead = if(head == n - 1) 0 else head + 1
       (a, new Queue(elements, n, nextHead, tail))
     }
+  }
+
+  class MaxHeap[A](val heap: Heap) {
+    
   }
 
 }
