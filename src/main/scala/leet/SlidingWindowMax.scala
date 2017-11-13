@@ -23,20 +23,24 @@ object SlidingWindowMax {
 
   def maxSlidingWindow(nums: Array[Int], k: Int): Array[Int] = {
 
-    val q0 = Vector.fill(k)(0)
-    val w = (0 until k).foldLeft(q0) {(qi, i) ⇒ qi.updated(i, nums(i))}
-    val queue0 = new Queue(w, k, 0, 0)
+    if(nums.isEmpty || k == 0) Array.empty[Int]
+    else {
 
-    val (maxs, _) = (0 to nums.length - k).foldLeft((Array.fill(nums.length - k  + 1)(0), queue0)) {
-      case ((a, queue), i) ⇒
-        val max = queue.elements.max
-        val au = a.updated(i, max)
-        val (_, qu) = queue.dequeue()
-        val qu1 = if (i >= nums.length - k) qu else qu.enqueue(nums(i + k))
-        (au, qu1)
+      val q0 = Vector.fill(k)(0)
+      val w = (0 until k).foldLeft(q0) { (qi, i) ⇒ qi.updated(i, nums(i)) }
+      val queue0 = new Queue(w, k, 0, 0)
+
+      val (maxs, _) = (0 to nums.length - k).foldLeft((Array.fill(nums.length - k + 1)(0), queue0)) {
+        case ((a, queue), i) ⇒
+          val max = queue.elements.max
+          val au = a.updated(i, max)
+          val (_, qu) = queue.dequeue()
+          val qu1 = if (i >= nums.length - k) qu else qu.enqueue(nums(i + k))
+          (au, qu1)
+      }
+
+      maxs
     }
-
-    maxs
   }
 
   class Queue[A](val elements: Vector[A], n: Int, head: Int, tail: Int) {
