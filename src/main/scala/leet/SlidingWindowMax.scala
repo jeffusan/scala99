@@ -56,7 +56,7 @@ object SlidingWindowMax {
   }
 
   class MaxHeap[A](val heap: Heap) {
-    
+
   }
 
 }
