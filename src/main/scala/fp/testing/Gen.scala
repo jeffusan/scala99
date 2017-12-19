@@ -8,6 +8,11 @@ trait Prop { self =>
   def &&(p: Prop): Prop = new Prop {
     def check: Either[(FailedCase, SuccessCount), SuccessCount] = ???
   }
+
+  /**
+    * either the the value that caused the property to fail and the number of cases that succeeded before the failure,
+    * or just the number of successes.
+    */
   def check: Either[(FailedCase, SuccessCount), SuccessCount]
 
 }
@@ -31,6 +36,8 @@ object Gen {
   def choose(start: Int, stopExclusive: Int): Gen[Int] = {
     Gen(State(RNG.nonNegativeInt).map(n => start + n % (stopExclusive-start)))
   }
+
+  def boolean2: Gen[Boolean] = Gen(State(RNG.int).map(_ % 2 == 0))
 
   def map2[A, B, C](a: Gen[A], b: Gen[B])(f: (A,B) => C): Gen[C] = {
     val sc = for {
@@ -58,7 +65,7 @@ object Gen {
 
   def boolean: Gen[Boolean] = Gen(State(RNG.nonNegativeInt).map(n => if(n % 2 == 0) true else false))
 
-  def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] = {
+  def listOfN_1[A](n: Int, g: Gen[A]): Gen[List[A]] = {
 
     val (_, result) = (0 until n).foldLeft[(Gen[A], Gen[List[A]])]((g, unit(List[A]()))){
       (gAndList, _) =>
@@ -73,6 +80,10 @@ object Gen {
         (ga, l)
     }
     result
+  }
+
+  def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] = {
+    List.fill(n)(g).foldLeft(unit(List[A]())){(r, a) => a.map2(r)(_ :: _)}
   }
 
 //  def listOfN[A](n: Int, g: Gen[A]): Gen[List[A]] =
@@ -104,6 +115,7 @@ object Gen {
 class GenOps[A](a: Gen[A]) {
   def map[B](f: A => B): Gen[B] = Gen.map(a)(f)
   def flatMap[B](f: A => Gen[B]): Gen[B] = Gen.flatMap(a)(f)
+  def map2[B, C](b: Gen[B])(f: (A, B) => C): Gen[C] = Gen.map2(a, b)(f)
 }
 
 
