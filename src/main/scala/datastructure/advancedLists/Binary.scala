@@ -21,9 +21,20 @@ object Binary {
   def add(a: List[Int], b: List[Int]): List[Int] = (a,b) match {
     case (xs, Nil) => xs
     case (Nil, xs) => xs
-    case (e::es, f::fs) if e == 0 || f == 0 => (e + f) :: add(es, fs)
-    case (e::es, f::fs) if e == 1 && f == 1 => 0 :: carry(1, add(es, fs))
+    case (e::es, f::fs) => ((e + f) % 2) :: carry((e + f) / 2, add(es, fs))
+//    case (e::es, f::fs) if e == 0 || f == 0 => (e + f) :: add(es, fs)
+//    case (e::es, f::fs) if e == 1 && f == 1 => 0 :: carry(1, add(es, fs))
     case _ => sys.error("invalid input")
+  }
+
+  /**
+    * assumes bits in reverse order: most significant bit at the tail
+    */
+  def multiply(a: List[Int], b: List[Int]): List[Int] = b match {
+    case Nil => Nil
+    case 0 :: xs => 0 :: multiply(a, xs) // assumes there will be a 1 at some point later => left shift operation (multiply by 2)
+    case 1 :: xs => add(a, 0 :: multiply(a, xs)) //add itself (a) to final result: the least significant bit will be 0 because the bit is the same
+    case _ => sys.error("bad input")
   }
 
 
