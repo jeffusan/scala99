@@ -37,5 +37,123 @@ object Binary {
     case _ => sys.error("bad input")
   }
 
+  /**
+    * assuming LSB at the head
+    */
+  def increment(l: List[Int]): List[Int] = l match {
+    case Nil => List(1)
+    case 0 :: xs => 1 :: xs // 0 + 1 = 1
+    case 1 :: xs => 0 :: increment(xs) // 1 + 1 = 0 and carry
+    case _ => sys.error("not a binary number")
+  }
+
+  def addition(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
+    case (xs, Nil) => xs
+    case (Nil, xs) => xs
+    case (i :: is, 0 :: js) => i :: add(is, js)
+    case (0 :: is, j :: js) => j :: add(is, js)
+    case (1 :: is, 1 :: js) => 0 :: increment(add(is, js))
+    case _ => sys.error("issue")
+  }
+
+  def decrement(l: List[Int]): List[Int] = l match {
+    case Nil => Nil
+    case 1 :: Nil => Nil
+    case 1 :: xs => 0 :: xs
+    case 0 :: xs => 1 :: decrement(xs)
+    case _ => sys.error("issue with decrement")
+
+  }
+
+  sealed abstract class Tree {
+    def size: Int
+  }
+
+  case class Leaf(n: Int) extends Tree {
+    override def size: Int = 1
+  }
+
+  case object Zero extends Tree {
+    override def size: Int = 0
+  }
+
+  case class One(t: Tree) extends Tree {
+    override def size: Int = t.size
+  }
+
+  case class Node(t1: Tree, t2: Tree) extends Tree {
+    override def size: Int = t1.size + t2.size
+  }
+
+  def link(t1: Tree, t2: Tree): Tree = Node(t1, t2)
+
+  def insert(l: List[Tree], t: Tree): List[Tree] =  l match {
+    case Nil => List(One(t))
+    case Zero :: tail => One(t) :: tail
+    case One(b) :: tail => Zero :: insert(tail, link(t, b)) //note that LSB is the left most one => here the last in dex is the right most (first element inserted is the right most)
+    case _ => sys.error("should no end up here while inserting")
+  }
+
+  def lift(l: List[Int]): List[Tree] = {
+    l.foldRight(List[Tree]()) {
+      (i, r) => insert(r, Leaf(i))
+    }
+  }
+
+  def lookup(l: List[Tree], i: Int): Tree = l match {
+    case Nil => Zero
+    case Zero :: tail => lookup(tail , i)
+    case One(t) :: tail if i < t.size => t
+    case One(t) :: tail if i >= t.size => lookup(tail, i - t.size)
+    case _ => sys.error("lookup fail")
+  }
+
+  def search(tree: Tree, index: Int): Int = (tree, index) match {
+    case (Leaf(v), 0) => v
+    case (n @ Node(t1, t2), i) if i >= n.size / 2 => search(t2, i - n.size / 2)
+    case (n @ Node(t1, t2), i) => search(t1, i)
+    case _ => sys.error("search fail")
+
+  }
+
+  def removeTree(t: List[Tree]): (Tree, List[Tree]) = t match {
+    case One(x) :: Nil => (x, Nil)
+    case One(x) :: ts => (x, Zero :: ts)
+    case Zero :: ts =>
+      val (Node(t1, t2), rest) = removeTree(ts)
+      (t1, One(t2) :: rest)
+    case _ => sys.error("error in removeTree")
+  }
+
+  def head(l: List[Tree]): Int = removeTree(l) match {
+    case (Leaf(x), _) => x
+    case _ => sys.error("issue in head")
+  }
+
+  def tail(l: List[Tree]): List[Tree] = removeTree(l) match {
+    case (_, ts) => ts
+    case _ => sys.error("issue in tail")
+  }
+
+  /**
+    * returns the Tree to update
+    */
+  def setVal(i: Int, newVal: Int, l: List[Tree]): List[Tree] = l match {
+    case Zero :: ts => Zero :: setVal(i, newVal, ts)
+    case One(t) :: ts if i < t.size => One(setValInTree(i, newVal, t)) :: ts
+    case One(t) :: ts if i >= t.size => One(t) :: setVal(i - t.size, newVal, ts)
+    case _ => sys.error("error in setVal")
+  }
+
+  def setValInTree(i: Int, newVal: Int, t: Tree): Tree = (i, t) match {
+    case (0, Leaf(x)) => Leaf(newVal)
+    case (j, n@Node(t1, t2)) if j < n.size / 2 => Node(setValInTree(i, newVal, t1), t2)
+    case (j, n@Node(t1, t2)) if j >= n.size / 2 => Node(t1, setValInTree(i - n.size / 2, newVal, t2))
+    case _ => sys.error("error in setValInTree")
+  }
+
+
+
+
 
 }
