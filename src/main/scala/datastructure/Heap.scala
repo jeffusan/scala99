@@ -54,7 +54,10 @@ object Heap {
     * <=> 2*i + 1 > n - 1
     * <=> i > n/2 - 1
     *
-    * O(n)
+    * O(n):
+    * Each call to MAX-HEAPIFY costs O(log(n)) time,
+    * and BUILD- MAX-HEAP makes O(n) such calls.
+    * Thus, the running time is O(n log n). This upper bound, though correct, is not asymptotically tight.
     */
   def buildMaxHeap(a: Array[Int]): Heap = {
     val init = Heap(a, a.length)
