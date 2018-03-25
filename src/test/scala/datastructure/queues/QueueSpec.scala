@@ -27,4 +27,13 @@ class QueueSpec extends FlatSpec with Matchers {
 
   }
 
+
+  "Deque operations on front (out)" should "keep the 2 lists with a max difference of c" in {
+
+    val result = Deque[Int](0, Stream.empty, 0, Stream.empty).pushFront(1).pushFront(2).pushFront(3)
+    result.inLen shouldBe 1
+    result.outLen shouldBe 2
+
+  }
+
 }

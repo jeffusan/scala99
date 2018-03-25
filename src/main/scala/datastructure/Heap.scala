@@ -69,9 +69,11 @@ object Heap {
   def swap(h: Heap, i: Int, j: Int): Heap = {
     val a = h.a
     val tmp = a(i)
-    val u0 = a.updated(i, a(j))
-    val u = u0.updated(j, tmp)
-    Heap(u, h.size)
+//    val u0 = a.updated(i, a(j))
+//    val u = u0.updated(j, tmp)
+    a(i) = a(j)
+    a(j) = tmp
+    Heap(a, h.size)
   }
 
 }

@@ -249,7 +249,7 @@ object Stream {
   def cons[A](hd: => A, tl: => Stream[A]): Stream[A] = {
     lazy val head = hd
     lazy val tail = tl
-    Cons(() => hd, () => tl)
+    Cons(() => head, () => tail)
   }
 
   def empty[A]: Stream[A] = Empty
