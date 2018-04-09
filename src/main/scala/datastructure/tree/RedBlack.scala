@@ -41,8 +41,12 @@ object RedBlack {
     * - If a node is red, then both its children are black
     * - the paths from node to its children contain same number of black nodes
     */
-  def balance[T](n: Node[T]): Node[T] = n match {
-    case n@Node(Black, cl@Node(Red, Node(Red, End, _, End), _, End), _, End) => cl.copy(right = n)
+  def balance[T](node: Node[T]): Node[T] = node match {
+    case n@Node(Black, cl@Node(Red, gcl@Node(Red, End, _, _), _, gcr), _, cr) => cl.copy(left = gcl.copy(color = Black), right = n.copy(left = gcr, right = cr))
+    case n@Node(Black, cl@Node(Red, gcl,_, gcr@Node(Red,_,_,_)), _,cr) => ???
+    case n@Node(Black, cl, _,cr@Node(Red, gcl, _, gcr@Node(Red, _,_,_))) => ???
+    case n@Node(Black, cl, _,cr@Node(Red, gcl@Node(Red, _, _, _), _, gcr)) => ???
+    case _ => node
   }
 
   def main(args: Array[String]): Unit = {
